@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="420" viewBox="0 0 1200 420" role="img" aria-labelledby="title desc">
+  <title id="title">Jonah Chang — Robotics, engineered further</title>
+  <desc id="desc">Black bezel header with a drifting dot lattice. Robotics, engineered further.</desc>
+  <defs>
+    <radialGradient id="blueglow" cx=".5" cy=".45" r=".65"><stop stop-color="#2997ff" stop-opacity=".16"/><stop offset="1" stop-color="#2997ff" stop-opacity="0"/></radialGradient>
+    <pattern id="dotgrid" width="34" height="34" patternUnits="userSpaceOnUse"><circle cx="3" cy="3" r="2" fill="#f5f5f7" fill-opacity=".13"/></pattern>
+  </defs>
+  <style>
+    .dot{transform-box:fill-box;transform-origin:center;animation:drift 7s ease-in-out infinite}
+    .m1{animation-delay:-1.2s}.m2{animation-delay:-2.6s}.m3{animation-delay:-4.1s}.m4{animation-delay:-5.5s}
+    @keyframes drift{50%{transform:translateY(-10px);opacity:.45}}
+    @media(prefers-reduced-motion:reduce){.dot{animation:none}}
+  </style>
+  <rect x="1" y="1" width="1198" height="418" rx="24" fill="#000" stroke="rgba(245,245,247,.17)" stroke-width="2"/>
+  <rect x="688" y="28" width="484" height="364" rx="20" fill="#0b0b0d"/>
+  <rect x="688" y="28" width="484" height="364" rx="20" fill="url(#blueglow)"/>
+  <rect x="688" y="28" width="484" height="364" rx="20" fill="url(#dotgrid)"/>
+  <g>
+    <circle class="dot m1" cx="760" cy="110" r="4" fill="#2997ff"/>
+    <circle class="dot m3" cx="828" cy="88" r="3" fill="#f5f5f7" fill-opacity=".7"/>
+    <circle class="dot m2" cx="896" cy="130" r="4.5" fill="#2997ff"/>
+    <circle class="dot m4" cx="964" cy="96" r="3" fill="#f5f5f7" fill-opacity=".7"/>
+    <circle class="dot m2" cx="1032" cy="140" r="4" fill="#2997ff"/>
+    <circle class="dot m1" cx="1100" cy="104" r="3" fill="#f5f5f7" fill-opacity=".7"/>
+    <circle class="dot m4" cx="794" cy="200" r="3" fill="#f5f5f7" fill-opacity=".7"/>
+    <circle class="dot m1" cx="862" cy="238" r="4" fill="#2997ff"/>
+    <circle class="dot m3" cx="930" cy="208" r="3" fill="#f5f5f7" fill-opacity=".7"/>
+    <circle class="dot m2" cx="998" cy="246" r="4.5" fill="#2997ff"/>
+    <circle class="dot m4" cx="1066" cy="212" r="3" fill="#f5f5f7" fill-opacity=".7"/>
+    <circle class="dot m3" cx="1124" cy="262" r="4" fill="#2997ff"/>
+    <circle class="dot m2" cx="760" cy="310" r="3" fill="#f5f5f7" fill-opacity=".7"/>
+    <circle class="dot m4" cx="844" cy="332" r="4" fill="#2997ff"/>
+    <circle class="dot m1" cx="928" cy="306" r="3" fill="#f5f5f7" fill-opacity=".7"/>
+    <circle class="dot m3" cx="1012" cy="336" r="4" fill="#2997ff"/>
+  </g>
+  <g font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="13" letter-spacing="2" fill="#86868b"><text x="52" y="58">JONAH CHANG / ROBOTICS &amp; AUTONOMOUS SYSTEMS</text></g>
+  <g font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Display', Helvetica, Arial, sans-serif" font-weight="700" font-size="68" letter-spacing="-3"><text x="48" y="158" fill="#fff">Robotics.</text><text x="48" y="234" fill="#fff">Engineered further.</text></g>
+  <text x="52" y="282" fill="#86868b" font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Text', Helvetica, Arial, sans-serif" font-size="21">Perception, localization, and motion — systems that work in the real world.</text>
+  <g font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="12" letter-spacing="2">
+    <rect x="52" y="308" width="128" height="34" rx="17" fill="rgba(41,151,255,.14)" stroke="#2997ff"/><text x="71" y="330" fill="#2997ff">ROBOTICS</text>
+    <rect x="192" y="308" width="104" height="34" rx="17" fill="rgba(41,151,255,.14)" stroke="#2997ff"/><text x="213" y="330" fill="#2997ff">VISION</text>
+    <rect x="308" y="308" width="128" height="34" rx="17" fill="rgba(41,151,255,.14)" stroke="#2997ff"/><text x="327" y="330" fill="#2997ff">SOFTWARE</text>
+  </g>
+  <path d="M52 372H1148" stroke="rgba(245,245,247,.17)" stroke-width="2"/>
+  <g fill="#86868b" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="12" letter-spacing="2"><text x="52" y="398">SENSE → UNDERSTAND → MOVE → REFINE</text><text x="1148" y="398" text-anchor="end">BUILT THROUGH ITERATION</text></g>
+</svg>

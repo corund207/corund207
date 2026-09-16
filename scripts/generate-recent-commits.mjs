@@ -80,33 +80,33 @@ export function renderActivity({ projects, total }, { start, end }) {
     const cells = project.weeks.map((count, week) => {
       const from = +start + week * WEEK;
       const through = Math.min(from + WEEK - 1, +end);
-      return `<rect x="${776 + week * 22}" y="${y - 14}" width="16" height="16" rx="4" fill="${count ? "#68e1c2" : "#202b35"}" opacity="${count ? (.25 + .75 * count / maxWeek).toFixed(3) : 1}"><title>${dateLabel(from)} to ${dateLabel(through)}: ${count} commits</title></rect>`;
+      return `<rect x="${776 + week * 22}" y="${y - 14}" width="16" height="16" rx="4" fill="${count ? "#2997ff" : "#1d1d1f"}" opacity="${count ? (.25 + .75 * count / maxWeek).toFixed(3) : 1}"><title>${dateLabel(from)} to ${dateLabel(through)}: ${count} commits</title></rect>`;
     }).join("");
     return `<g>
       <title>${esc(project.name)}: ${project.count} commits</title>
-      <text x="44" y="${y}" fill="#f0f6fc" font-size="18">${esc(name)}</text>
-      <rect x="342" y="${y - 12}" width="364" height="12" rx="6" fill="#202b35"/>
-      <rect x="342" y="${y - 12}" width="${(project.count / maxCount * 364).toFixed(2)}" height="12" rx="6" fill="#68e1c2"/>
+      <text x="44" y="${y}" fill="#f5f5f7" font-size="18">${esc(name)}</text>
+      <rect x="342" y="${y - 12}" width="364" height="12" rx="6" fill="#1d1d1f"/>
+      <rect x="342" y="${y - 12}" width="${(project.count / maxCount * 364).toFixed(2)}" height="12" rx="6" fill="#2997ff"/>
       ${cells}
-      <text x="1156" y="${y}" fill="#f0f6fc" font-size="20" font-weight="700" text-anchor="end">${project.count}</text>
+      <text x="1156" y="${y}" fill="#f5f5f7" font-size="20" font-weight="700" text-anchor="end">${project.count}</text>
     </g>`;
   }).join("\n");
   return `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="${height}" viewBox="0 0 1200 ${height}" role="img" aria-labelledby="title desc">
   <title id="title">Public code activity — last 13 weeks</title>
   <desc id="desc">${total} authored commits across ${projects.length} repositories, ${dateLabel(start)} through ${dateLabel(end)} UTC. Owned public non-fork, non-archived repositories, default branches only. Generated profile refreshes excluded. ${esc(projects.map((p) => p.name + ": " + p.count).join("; "))}</desc>
-  <rect x="1" y="1" width="1198" height="${height - 2}" rx="20" fill="#0d1117" stroke="#293441"/>
-  <text x="44" y="42" fill="#98a9bc" font-family="monospace" font-size="13" letter-spacing="2">THE LAB / PUBLIC CODE ACTIVITY</text>
+  <rect x="1" y="1" width="1198" height="${height - 2}" rx="20" fill="#000000" stroke="#2c2c2e"/>
+  <text x="44" y="42" fill="#86868b" font-family="monospace" font-size="13" letter-spacing="2">THE LAB / PUBLIC CODE ACTIVITY</text>
   <g font-family="Arial, Helvetica, sans-serif">
-    <text x="42" y="99" fill="#f0f6fc" font-size="42" font-weight="700">${total}<tspan dx="12" fill="#a7b6c8" font-size="25" font-weight="400">authored commits</tspan></text>
-    <text x="44" y="132" fill="#a7b6c8" font-size="17">${projects.length} repositories · 13 weeks · generated refreshes excluded</text>
-    <text x="1156" y="91" fill="#68e1c2" font-size="16" text-anchor="end">${dateLabel(start)} — ${dateLabel(end)}</text>
-    <text x="1156" y="118" fill="#98a9bc" font-size="14" text-anchor="end">Updated ${end.toISOString().slice(0, 16).replace("T", " ")} UTC</text>
-    <path d="M44 151H1156" stroke="#293441"/>
-    <g fill="#98a9bc" font-size="12" font-family="monospace" letter-spacing="1.5"><text x="44" y="177">REPOSITORY</text><text x="342" y="177">COMMITS / SAME SCALE</text><text x="776" y="177">WEEKLY ACTIVITY →</text><text x="1156" y="177" text-anchor="end">TOTAL</text></g>
-    ${rows || '<text x="600" y="218" fill="#a7b6c8" font-size="20" text-anchor="middle">No matching commits in this window.</text>'}
-    <path d="M44 ${height - 63}H1156" stroke="#293441"/>
-    <text x="44" y="${height - 31}" fill="#98a9bc" font-size="14">Default branches · author dates in UTC · latest week is partial</text>
-    <text x="1156" y="${height - 31}" fill="#98a9bc" font-size="14" text-anchor="end">Weekly color: 0 → ${maxWeek} commits · shared scale</text>
+    <text x="42" y="99" fill="#f5f5f7" font-size="42" font-weight="700">${total}<tspan dx="12" fill="#86868b" font-size="25" font-weight="400">authored commits</tspan></text>
+    <text x="44" y="132" fill="#86868b" font-size="17">${projects.length} repositories · 13 weeks · generated refreshes excluded</text>
+    <text x="1156" y="91" fill="#2997ff" font-size="16" text-anchor="end">${dateLabel(start)} — ${dateLabel(end)}</text>
+    <text x="1156" y="118" fill="#86868b" font-size="14" text-anchor="end">Updated ${end.toISOString().slice(0, 16).replace("T", " ")} UTC</text>
+    <path d="M44 151H1156" stroke="#2c2c2e"/>
+    <g fill="#86868b" font-size="12" font-family="monospace" letter-spacing="1.5"><text x="44" y="177">REPOSITORY</text><text x="342" y="177">COMMITS / SAME SCALE</text><text x="776" y="177">WEEKLY ACTIVITY →</text><text x="1156" y="177" text-anchor="end">TOTAL</text></g>
+    ${rows || '<text x="600" y="218" fill="#86868b" font-size="20" text-anchor="middle">No matching commits in this window.</text>'}
+    <path d="M44 ${height - 63}H1156" stroke="#2c2c2e"/>
+    <text x="44" y="${height - 31}" fill="#86868b" font-size="14">Default branches · author dates in UTC · latest week is partial</text>
+    <text x="1156" y="${height - 31}" fill="#86868b" font-size="14" text-anchor="end">Weekly color: 0 → ${maxWeek} commits · shared scale</text>
   </g>
 </svg>\n`;
 }

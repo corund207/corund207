@@ -1,3 +1,5 @@
+![Jonah Chang — Robotics, engineered further.](assets/header.svg)
+
 <div align="center">
 
 # Jonah Chang
@@ -22,6 +24,8 @@ I'm a developer focused on **robotics, computer vision, and systems software**.
 I like building projects that connect software to the physical world — from stereo vision and object tracking to robot localization, motion control, and low-level Linux tooling.
 
 Currently, I'm especially interested in **low-cost perception systems, autonomous robotics, edge AI, and real-time software**.
+
+![How I build — the feedback loop.](assets/feedback-loop.svg)
 
 ### Current Work
 
@@ -64,6 +68,8 @@ It provides field-relative position tracking alongside PID motion, boomerang-sty
 
 `odometry → localization → path planning → motion`
 
+![A live robotics control cycle.](assets/systems-loop.svg)
+
 [View project →](https://github.com/jonahchang207/odyssey) · [Documentation →](https://jonahchang207.github.io/odyssey/)
 
 ---
@@ -77,6 +83,12 @@ The project includes asynchronous geometry loading, spatial culling, camera-plan
 `process data → geometry → visualization → interaction`
 
 [View project →](https://github.com/jonahchang207/sourcesight-linux)
+
+---
+
+### Activity
+
+![Public code activity — last 13 weeks.](assets/recent-commits.svg)
 
 ---
 
@@ -103,17 +115,6 @@ The project includes asynchronous geometry loading, spatial culling, camera-plan
 ![Git](https://img.shields.io/badge/Git-18181B?style=flat-square\&logo=git\&logoColor=white)
 ![CMake](https://img.shields.io/badge/CMake-18181B?style=flat-square\&logo=cmake\&logoColor=white)
 ![Fusion 360](https://img.shields.io/badge/Fusion_360-18181B?style=flat-square\&logo=autodesk\&logoColor=white)
-
-</div>
-
----
-
-### GitHub
-
-<div align="center">
-
-<img height="155" src="https://github-readme-stats.vercel.app/api?username=jonahchang207&show_icons=true&hide_border=true&hide_title=true&bg_color=00000000&text_color=8b949e&icon_color=c9d1d9&ring_color=c9d1d9" alt="Jonah's GitHub statistics" />
-<img height="155" src="https://github-readme-stats.vercel.app/api/top-langs/?username=jonahchang207&layout=compact&hide_border=true&bg_color=00000000&text_color=8b949e&title_color=c9d1d9" alt="Jonah's most used languages" />
 
 </div>
 
