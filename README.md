@@ -8,7 +8,7 @@
 
 Building practical systems at the intersection of perception, localization, motion, and software.
 
-[![Portfolio](https://img.shields.io/badge/Portfolio-18181B?style=flat-square\&logo=vercel\&logoColor=white)](https://portfolio-five-omega-y8vld3apbj.vercel.app/)
+[![Portfolio](https://img.shields.io/badge/Portfolio-18181B?style=flat-square\&logo=vercel\&logoColor=white)](https://jonahchang207.vercel.app/)
 [![GitHub](https://img.shields.io/badge/GitHub-18181B?style=flat-square\&logo=github\&logoColor=white)](https://github.com/jonahchang207)
 
 <sub>perception → localization → motion</sub>
@@ -122,7 +122,7 @@ The project includes asynchronous geometry loading, spatial culling, camera-plan
 
 <div align="center">
 
-**[Portfolio](https://portfolio-five-omega-y8vld3apbj.vercel.app/) · [Projects](https://github.com/jonahchang207?tab=repositories)**
+**[Portfolio](https://jonahchang207.vercel.app/) · [Projects](https://github.com/jonahchang207?tab=repositories)**
 
 <sub>Building systems that can perceive, understand, and interact with the world.</sub>
 
