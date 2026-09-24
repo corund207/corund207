@@ -1,9 +1,9 @@
-name: Refresh recent commit activity
+name: Refresh profile activity
 
 on:
   push:
     paths-ignore:
-      - "assets/recent-commits.svg"
+      - "assets/activity-*.svg"
   schedule:
     - cron: "17 12 * * *"
   workflow_dispatch:
@@ -23,21 +23,21 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Check activity accounting
-        run: node --test scripts/generate-recent-commits.test.mjs
+      - name: Check activity accounting and artwork
+        run: node --test scripts/generate-recent-commits.test.mjs scripts/build-art.test.mjs
       - name: Generate thirteen-week activity graph
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GITHUB_OWNER: jonahchang207
+          GITHUB_OWNER: ${{ github.repository_owner }}
         run: node scripts/generate-recent-commits.mjs
       - name: Commit updated graph
         run: |
-          if git diff --quiet -- assets/recent-commits.svg; then
+          if git diff --quiet -- assets/activity-dark.svg assets/activity-light.svg; then
             echo "Activity graph is already current."
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -- assets/recent-commits.svg
+          git add -- assets/activity-dark.svg assets/activity-light.svg
           git commit -m "Update recent commit activity"
           git push

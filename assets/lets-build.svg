@@ -1,8 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="180" viewBox="0 0 1200 180" role="img" aria-labelledby="title desc">
-  <title id="title">Working on something that moves?</title><desc id="desc">Let's talk robotics, computer vision, or your next engineering project. Email Jonah.</desc>
-  <rect x="1" y="1" width="1198" height="178" rx="20" fill="#1d1d1f" stroke="rgba(245,245,247,.17)" stroke-width="2"/>
-  <text x="44" y="43" fill="#2997ff" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="13" letter-spacing="2">LET'S COMPARE NOTES</text>
-  <text x="42" y="96" fill="#fff" font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Display', Helvetica, Arial, sans-serif" font-size="38" font-weight="700">Working on something that moves?</text>
-  <text x="44" y="137" fill="#86868b" font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Text', Helvetica, Arial, sans-serif" font-size="19">Robotics, computer vision, or an idea worth building. Say hello.</text>
-  <circle cx="1098" cy="90" r="32" fill="#2997ff"/><path d="M1084 104l28-28m-25 0h25v25" fill="none" stroke="#000" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-</svg>

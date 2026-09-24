@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="210" viewBox="0 0 1200 210" role="img" aria-labelledby="title desc">
+<title id="title">Selected work.</title>
+<desc id="desc">What I’m building. Selected work.</desc>
+<style>.r{animation:rise .85s cubic-bezier(0.215, 0.61, 0.355, 1) backwards}@keyframes rise{from{opacity:0;transform:translateY(22px)}}.still{display:none}@media (prefers-reduced-motion:reduce){*{animation:none!important}.live{display:none}.still{display:inline}}</style>
+<g text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Helvetica, Arial, sans-serif" font-weight="520">
+<text class="r" x="600" y="78" font-size="26" fill="#86868b">What I’m building</text>
+<text class="r" style="animation-delay:.08s" x="600" y="170" font-size="84" letter-spacing="-4.4" fill="#ffffff">Selected work.</text>
+</g>
+</svg>

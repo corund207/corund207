@@ -1,8 +1,9 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { activityWindow, summarizeCommits, collectActivity, renderActivity } from './generate-recent-commits.mjs';
+import { themes } from './theme.mjs';
 
-const owner = 'jonahchang207';
+const owner = 'corund207';
 const window = activityWindow(new Date('2026-09-06T12:00:00Z'));
 function commit(sha, date, message = 'Build robot', login = owner) {
   return { sha, author: { login, type: 'User' }, commit: {
@@ -80,6 +81,8 @@ test('render keeps totals, shared heat scale, escaped names and empty state read
   assert.match(svg, /A&lt;&amp;/);
   assert.equal((svg.match(/opacity="0.438"/g) || []).length, 2);
   assert.match(svg, /0 → 8 commits/);
+  assert.match(renderActivity({ projects, total: 12 }, window, themes.light), new RegExp(themes.light.surface));
   assert.match(svg, /12<tspan/);
+  assert.match(svg, /Weekly totals: 4, 8, 0/);
   assert.match(renderActivity({ projects: [], total: 0 }, window), /No matching commits/);
 });
