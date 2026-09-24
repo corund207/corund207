@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="171" height="48" viewBox="0 0 171 48" role="img" aria-labelledby="title desc">
+<title id="title">Visit Portfolio</title>
+<desc id="desc">Visit Portfolio button</desc>
+<style>.still{display:none}@media (prefers-reduced-motion:reduce){*{animation:none!important}.live{display:none}.still{display:inline}}</style>
+<rect x=".75" y=".75" width="169.5" height="46.5" rx="23.25" fill="#0071e3" stroke="#0071e3" stroke-width="1.5"/>
+<text x="123" y="29" text-anchor="end" font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="15" font-weight="500" fill="#ffffff">Visit Portfolio</text>
+<path transform="translate(131 16) scale(0.67)" d="M7 7h10v10M7 17 17 7" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

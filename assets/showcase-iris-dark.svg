@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="580" viewBox="0 0 1200 580" role="img" aria-labelledby="title desc">
+<title id="title">IRIS. See it. Pick it. Sort it. A 3D-printed arm for autonomous identification and sorting.</title>
+<desc id="desc">Parts arrive on a conveyor, a camera classifies each one, and the arm lifts it into the matching bin.</desc>
+<style>.r{animation:rise .85s cubic-bezier(0.215, 0.61, 0.355, 1) backwards}@keyframes rise{from{opacity:0;transform:translateY(22px)}}
+@keyframes j0{0%{transform:rotate(-139.03deg)}13%{transform:rotate(-115.17deg)}18%{transform:rotate(-152.07deg)}22%{transform:rotate(-152.07deg)}28%{transform:rotate(-105.83deg)}38%{transform:rotate(-56.83deg)}43%{transform:rotate(-6.07deg)}46%{transform:rotate(-6.07deg)}52%{transform:rotate(-139.03deg)}59%{transform:rotate(-115.17deg)}64%{transform:rotate(-152.07deg)}68%{transform:rotate(-152.07deg)}74%{transform:rotate(-105.83deg)}84%{transform:rotate(-21.3deg)}89%{transform:rotate(19.7deg)}92%{transform:rotate(19.7deg)}100%{transform:rotate(-139.03deg)}}.j0{animation:j0 12s ease-in-out infinite}@keyframes j1{0%{transform:rotate(113.05deg)}13%{transform:rotate(231.37deg)}18%{transform:rotate(238.96deg)}22%{transform:rotate(238.96deg)}28%{transform:rotate(233.17deg)}38%{transform:rotate(119.62deg)}43%{transform:rotate(97.6deg)}46%{transform:rotate(97.6deg)}52%{transform:rotate(113.05deg)}59%{transform:rotate(231.37deg)}64%{transform:rotate(238.96deg)}68%{transform:rotate(238.96deg)}74%{transform:rotate(233.17deg)}84%{transform:rotate(403.42deg)}89%{transform:rotate(370.18deg)}92%{transform:rotate(370.18deg)}100%{transform:rotate(473.05deg)}}.j1{animation:j1 12s ease-in-out infinite}@keyframes j2{0%{transform:rotate(115.98deg)}13%{transform:rotate(-26.2deg)}18%{transform:rotate(3.11deg)}22%{transform:rotate(3.11deg)}28%{transform:rotate(-37.34deg)}38%{transform:rotate(27.21deg)}43%{transform:rotate(-1.53deg)}46%{transform:rotate(-1.53deg)}52%{transform:rotate(115.98deg)}59%{transform:rotate(-26.2deg)}64%{transform:rotate(3.11deg)}68%{transform:rotate(3.11deg)}74%{transform:rotate(-37.34deg)}84%{transform:rotate(67.88deg)}89%{transform:rotate(60.12deg)}92%{transform:rotate(60.12deg)}100%{transform:rotate(115.98deg)}}.j2{animation:j2 12s ease-in-out infinite}
+@keyframes inA{0%{transform:translateX(-150px);opacity:0}2%{opacity:1}8%,21.99%{transform:translateX(0);opacity:1}22%,100%{transform:translateX(0);opacity:0}}.inA{animation:inA 12s cubic-bezier(0.25, 0.46, 0.45, 0.94) infinite}
+@keyframes inB{0%,45.99%{transform:translateX(-150px);opacity:0}46%{transform:translateX(-150px);opacity:0}48%{opacity:1}54%,67.99%{transform:translateX(0);opacity:1}68%,100%{transform:translateX(0);opacity:0}}.inB{animation:inB 12s cubic-bezier(0.25, 0.46, 0.45, 0.94) infinite}
+@keyframes heldA{0%,21.99%{opacity:0}22%,45.99%{opacity:1}46%,100%{opacity:0}}.heldA{animation:heldA 12s linear infinite}
+@keyframes heldB{0%,67.99%{opacity:0}68%,91.99%{opacity:1}92%,100%{opacity:0}}.heldB{animation:heldB 12s linear infinite}
+@keyframes dropA{0%,45.99%{opacity:0}46%,94%{opacity:1}100%{opacity:0}}.dropA{animation:dropA 12s linear infinite}
+@keyframes dropB{0%,91.99%{opacity:0}92%,95%{opacity:1}100%{opacity:0}}.dropB{animation:dropB 12s linear infinite}
+@keyframes scan{0%,8%{opacity:0}9%{opacity:1}13%{opacity:.2}14%,54%{opacity:0}55%{opacity:1}59%{opacity:.2}60%,100%{opacity:0}}.scan{animation:scan 12s linear infinite}
+@keyframes clsA{0%{opacity:0}8.99%{opacity:0}9%{opacity:1}45.99%{opacity:1}46%{opacity:0}100%{opacity:0}}.clsA{opacity:0;animation:clsA 12s linear infinite}
+@keyframes clsB{0%{opacity:0}54.99%{opacity:0}55%{opacity:1}91.99%{opacity:1}92%{opacity:0}100%{opacity:0}}.clsB{opacity:0;animation:clsB 12s linear infinite}
+.belt{stroke-dasharray:4 10;animation:belt 1.2s linear infinite}@keyframes belt{to{stroke-dashoffset:-14}}.still{display:none}@media (prefers-reduced-motion:reduce){*{animation:none!important}.live{display:none}.still{display:inline}}</style>
+<rect width="1200" height="580" rx="28" fill="#1d1d1f"/>
+<g class="r">
+<text x="64" y="168" font-family="'SFMono-Regular', ui-monospace, Menlo, Monaco, Consolas, monospace" font-size="13" letter-spacing=".52" fill="#2997ff">03  ·  MANIPULATION</text>
+<text x="60" y="262" font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="84" font-weight="520" letter-spacing="-4.4" fill="#ffffff">IRIS</text>
+</g>
+<g class="r" style="animation-delay:.08s">
+<g font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="24" fill="#86868b"><text x="64" y="318">See it. Pick it. Sort it.</text><text x="64" y="352">A 3D-printed arm for autonomous</text><text x="64" y="386">identification and sorting.</text></g>
+<text x="64" y="436" font-family="'SFMono-Regular', ui-monospace, Menlo, Monaco, Consolas, monospace" font-size="12" letter-spacing=".5" fill="#86868b">3RD PLACE · ENGINEERING · MAINE STATE SCIENCE FAIR</text>
+</g>
+<g class="r" style="animation-delay:.16s">
+<circle cx="88" cy="496" r="23" fill="none" stroke="rgba(245, 245, 247, 0.42)" stroke-width="1.5"/>
+<path transform="translate(78 486) scale(0.83)" d="M5 12h14M12 5l7 7-7 7" fill="none" stroke="#f5f5f7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="126" y="502" font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="18" font-weight="500" fill="#f5f5f7">Explore IRIS</text>
+</g>
+<g transform="translate(520 40)">
+<clipPath id="iris-panel"><rect width="640" height="500" rx="20"/></clipPath>
+<rect x=".5" y=".5" width="639" height="499" rx="20" fill="#161617" stroke="rgba(245, 245, 247, 0.17)"/>
+<g clip-path="url(#iris-panel)"><path d="M0 440H640" stroke="rgba(245, 245, 247, 0.17)"/>
+<rect x="36" y="390" width="206" height="22" rx="11" fill="none" stroke="rgba(245, 245, 247, 0.27)" stroke-width="2"/>
+<path class="belt" d="M48 401H230" stroke="#86868b" stroke-width="2"/>
+<path d="M410 384V440H486V384M518 384V440H594V384" fill="none" stroke="rgba(245, 245, 247, 0.27)" stroke-width="2"/>
+<text x="448" y="468" font-family="'SFMono-Regular', ui-monospace, Menlo, Monaco, Consolas, monospace" font-size="11" letter-spacing=".44" fill="#86868b" text-anchor="middle" xml:space="preserve">CLASS A</text><text x="556" y="468" font-family="'SFMono-Regular', ui-monospace, Menlo, Monaco, Consolas, monospace" font-size="11" letter-spacing=".44" fill="#86868b" text-anchor="middle" xml:space="preserve">CLASS B</text>
+<path class="scan" d="M202 108L170 388H250L218 108Z" fill="#2997ff" fill-opacity=".14" opacity="0"/>
+<rect x="190" y="84" width="40" height="24" rx="6" fill="#1d1d1f" stroke="#d2d2d7" stroke-width="1.5"/><circle cx="210" cy="96" r="6" fill="none" stroke="#2997ff" stroke-width="2"/>
+<path d="M210 84V0" stroke="rgba(245, 245, 247, 0.27)" stroke-width="2"/>
+<g class="live"><text class="clsA" x="242" y="100" font-family="'SFMono-Regular', ui-monospace, Menlo, Monaco, Consolas, monospace" font-size="11" letter-spacing=".44" fill="#2997ff" xml:space="preserve">→ CLASS A</text><text class="clsB" x="242" y="100" font-family="'SFMono-Regular', ui-monospace, Menlo, Monaco, Consolas, monospace" font-size="11" letter-spacing=".44" fill="#2997ff" xml:space="preserve">→ CLASS B</text></g>
+<g class="inA"><rect x="199" y="369" width="22" height="22" rx="5" fill="#2997ff"/></g>
+<g class="inB" style="opacity:0"><circle cx="210" cy="380" r="11" fill="#d2d2d7"/></g>
+<g class="dropA" style="opacity:0"><rect x="437" y="417" width="22" height="22" rx="5" fill="#2997ff"/></g>
+<g class="dropB" style="opacity:0"><circle cx="556" cy="428" r="11" fill="#d2d2d7"/></g>
+<rect x="296" y="298" width="48" height="142" rx="8" fill="#f5f5f7" fill-opacity=".12"/>
+<g transform="translate(320 290)"><g class="j0" transform="rotate(-139.03)">
+<path d="M0 0H132" stroke="#d2d2d7" stroke-width="14" stroke-linecap="round"/><path d="M0 0H132" stroke="#161617" stroke-width="4" stroke-linecap="round" stroke-opacity=".5"/>
+<g transform="translate(132 0)"><g class="j1" transform="rotate(113.05)">
+<path d="M0 0H122" stroke="#d2d2d7" stroke-width="14" stroke-linecap="round"/><path d="M0 0H122" stroke="#161617" stroke-width="4" stroke-linecap="round" stroke-opacity=".5"/>
+<g transform="translate(122 0)"><g class="j2" transform="rotate(115.98)">
+<path d="M0 0H16M16 -14V14M16 -14H42M16 14H42" fill="none" stroke="#d2d2d7" stroke-width="3.5" stroke-linecap="round"/>
+<g class="heldA" style="opacity:0"><rect x="19" y="-11" width="22" height="22" rx="5" fill="#2997ff"/></g><g class="heldB" style="opacity:0"><circle cx="30" cy="0" r="11" fill="#d2d2d7"/></g>
+</g><circle r="8" fill="#161617" stroke="#2997ff" stroke-width="2.5"/></g>
+</g><circle r="8" fill="#161617" stroke="#2997ff" stroke-width="2.5"/></g>
+</g><circle r="8" fill="#161617" stroke="#2997ff" stroke-width="2.5"/></g>
+<text x="24" y="34" font-family="'SFMono-Regular', ui-monospace, Menlo, Monaco, Consolas, monospace" font-size="11" letter-spacing=".44" fill="#2997ff" xml:space="preserve">IDENTIFY  →  PICK  →  SORT</text>
+<text x="616" y="34" font-family="'SFMono-Regular', ui-monospace, Menlo, Monaco, Consolas, monospace" font-size="11" letter-spacing=".44" fill="#86868b" text-anchor="end" xml:space="preserve">6-DOF  ·  3D PRINTED</text></g>
+</g>
+</svg>
