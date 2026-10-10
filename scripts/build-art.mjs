@@ -543,51 +543,84 @@ ${label(t, 616, 34, readout(0.36), { anchor: "end" })}
 function orbit(base) {
   const t = tinted(base, "orbit");
   const loop = 10, N = 40;
+  // Map coordinates (x right, y toward the cameras) laid on the 3D floor; heights in px.
   const camL = [270, 440], camR = [370, 440], mid = [320, 440];
+  const HC = 56, HT = 34, origin = [338, 384];
   const track = Array.from({ length: N + 1 }, (_, i) => {
     const a = (i / N) * 2 * Math.PI;
     return [r2(320 + 190 * Math.sin(a)), r2(210 + 70 * Math.sin(2 * a + 0.6))];
   });
+  const S = ([x, y], z = 0) => { const [u, v] = project([x - mid[0], mid[1] - y, z]); return [r2(origin[0] + u), r2(origin[1] + v)]; };
   const values = (fn) => track.map(fn).join(";");
   const anim = (attr, fn) => `<animate attributeName="${attr}" dur="${loop}s" repeatCount="indefinite" values="${values(fn)}"/>`;
-  const others = [[[140, 150], [160, 170], [150, 190]], [[500, 110], [482, 128], [492, 100]]];
+  const slide = (fn) => `<animateTransform attributeName="transform" type="translate" dur="${loop}s" repeatCount="indefinite" values="${values(fn)}"/>`;
+  const ray = (from, attrs) => `<line x1="${from[0]}" y1="${from[1]}" ${attrs}>${anim("x2", (p) => S(p, HT)[0])}${anim("y2", (p) => S(p, HT)[1])}</line>`;
+  const others = [[140, 150], [500, 110]];
   const stages = ["STEREO PAIR", "YOLO DETECT", "TRIANGULATE", "KALMAN TRACK"];
   const bracket = (s) => [[-1, -1], [1, -1], [1, 1], [-1, 1]].map(([sx, sy]) => `M${sx * s} ${sy * (s - 7)}V${sy * s}H${sx * (s - 7)}`).join("");
-  const cone = ([x, y]) => `M${x} ${y}L${x - 400} ${y - 560}H${x + 400}Z`;
-  const [sx, sy] = track[4];
+  const cone = ([x, y]) => `M${x} ${y}L${x - 230} ${y - 350}H${x + 230}Z`;
+  const lensL = S(camL, HC), lensR = S(camR, HC), still = track[4];
   const style = `
 ${stages.map((_, i) => [["t", t.muted, t.foreground], ["c", t.lineStrong, t.accent]].map(([part, off, on]) =>
     `@keyframes s${part}${i}{0%,${pct(i / 4)}{fill:${off}}${pct(i / 4 + 0.01)},${pct((i + 1) / 4)}{fill:${on}}${pct((i + 1) / 4 + 0.01)},100%{fill:${off}}}`).join("")).join("")}
 ${stages.map((_, i) => `.s${i} text{fill:${t.muted};animation:st${i} ${loop / 2}s linear infinite}.s${i} circle{fill:${t.lineStrong};animation:sc${i} ${loop / 2}s linear infinite}`).join("")}
 .ghost{animation:ghost 3.4s ease-in-out infinite}@keyframes ghost{50%{opacity:.35}}`;
-  const target = (x, y) => `<circle r="6" fill="${t.accent}"/><path d="${bracket(18)}" fill="none" stroke="${t.accent}" stroke-width="1.5"/>`;
-  const diagram = `<g fill="${t.accent}" fill-opacity=".045">${[camL, camR].map((c) => `<path d="${cone(c)}"/>`).join("")}</g>
-<g fill="none" stroke="${t.line}">${[120, 220, 320].map((r) => `<path d="M${mid[0] - r} ${mid[1]}A${r} ${r} 0 0 1 ${mid[0] + r} ${mid[1]}"/>`).join("")}</g>
-${[120, 220, 320].map((r, i) => label(t, mid[0] + 8, mid[1] - r - 8, `${i + 1} M`)).join("")}
-${others.map((pts, i) => `<g class="ghost" style="animation-delay:-${i * 1.3}s"><g transform="translate(${pts[0].join(" ")})"><circle r="4" fill="${t.dotInk}" fill-opacity=".45"/><path d="${bracket(13)}" fill="none" stroke="${t.muted}" stroke-width="1.2"/></g></g>`).join("")}
-${label(t, others[0][0][0] + 18, others[0][0][1] + 4, "ID 03")}${label(t, others[1][0][0] + 18, others[1][0][1] + 4, "ID 11")}
+
+  // Floor: grid, field-of-view cones, range rings, the baseline foot, and target shadows.
+  const grid = [];
+  for (let x = mid[0] - 360; x <= mid[0] + 360; x += 40) grid.push(`M${x} ${mid[1] + 60}V${mid[1] - 420}`);
+  for (let y = mid[1] + 60; y >= mid[1] - 420; y -= 40) grid.push(`M${mid[0] - 360} ${y}H${mid[0] + 360}`);
+  const shadow = (r, opacity) => `<ellipse rx="${r}" ry="${r}" fill="${t.accent}" fill-opacity="${opacity}"/>`;
+  const floor = `<g transform="${planeMatrix(1, S(mid))}"><g transform="translate(${-mid[0]} ${-mid[1]})">
+<path d="${grid.join("")}" stroke="${t.line}" stroke-opacity=".7"/>
+<g fill="${t.accent}" fill-opacity=".04">${[camL, camR].map((c) => `<path d="${cone(c)}"/>`).join("")}</g>
+<g fill="none" stroke="${t.lineStrong}" stroke-width="1.4">${[120, 220, 320].map((r) => `<path d="M${mid[0] - r} ${mid[1]}A${r} ${r} 0 0 1 ${mid[0] + r} ${mid[1]}"/>`).join("")}</g>
+<rect x="${camL[0] - 24}" y="${mid[1] - 12}" width="${camR[0] - camL[0] + 48}" height="24" rx="8" fill="${t.foreground}" fill-opacity=".08" stroke="${t.lineStrong}"/>
+${others.map((p, i) => `<g class="ghost" style="animation-delay:-${i * 1.3}s"><g transform="translate(${p.join(" ")})">${shadow(10, 0.12)}</g></g>`).join("")}
 <g class="live">
-<line x1="${camL[0]}" y1="${camL[1]}" stroke="${t.accent}" stroke-opacity=".7" stroke-width="1.5">${anim("x2", ([x]) => x)}${anim("y2", ([, y]) => y)}</line>
-<line x1="${camR[0]}" y1="${camR[1]}" stroke="${t.accent}" stroke-opacity=".7" stroke-width="1.5">${anim("x2", ([x]) => x)}${anim("y2", ([, y]) => y)}</line>
-<line x1="${mid[0]}" y1="${mid[1]}" stroke="${t.muted}" stroke-dasharray="3 5">${anim("x2", ([x]) => x)}${anim("y2", ([, y]) => y)}</line>
-<g>${target()}<animateTransform attributeName="transform" type="translate" dur="${loop}s" repeatCount="indefinite" values="${values(([x, y]) => `${x} ${y}`)}"/></g>
-<text font-family="${MONO}" font-size="11" letter-spacing=".44" fill="${t.accent}">ID 07<animateTransform attributeName="transform" type="translate" dur="${loop}s" repeatCount="indefinite" values="${values(([x, y]) => `${r2(x + 26)} ${r2(y - 14)}`)}"/></text>
+<line x1="${mid[0]}" y1="${mid[1]}" stroke="${t.muted}" stroke-dasharray="3 5" stroke-width="1.4">${anim("x2", ([x]) => x)}${anim("y2", ([, y]) => y)}</line>
+<g>${shadow(12, 0.22)}${slide(([x, y]) => `${x} ${y}`)}</g>
 </g>
 <g class="still">
-<path d="M${camL.join(" ")}L${sx} ${sy}M${camR.join(" ")}L${sx} ${sy}" stroke="${t.accent}" stroke-opacity=".7" stroke-width="1.5"/>
-<path d="M${mid.join(" ")}L${sx} ${sy}" stroke="${t.muted}" stroke-dasharray="3 5"/>
-<g transform="translate(${sx} ${sy})">${target()}</g>
+<path d="M${mid.join(" ")}L${still.join(" ")}" stroke="${t.muted}" stroke-dasharray="3 5" stroke-width="1.4"/>
+<g transform="translate(${still.join(" ")})">${shadow(12, 0.22)}</g>
+</g>
+</g></g>`;
+
+  // Above the floor: the camera mast, floating targets on drop lines, and the rays between them.
+  const marker = (size, color, dotR) => `<circle r="${dotR}" fill="${color}"/><path d="${bracket(size)}" fill="none" stroke="${color}" stroke-width="1.5"/>`;
+  const camera = ([x, y]) => `<rect x="${x - 16}" y="${y - 11}" width="32" height="22" rx="6" fill="${t.surface}" stroke="${t.foregroundSoft}" stroke-width="1.5"/><circle cx="${x}" cy="${y}" r="5" fill="none" stroke="${t.accent}" stroke-width="2"/>`;
+  const ghosts = others.map((p, i) => {
+    const [fx, fy] = S(p), [gx, gy] = S(p, HT);
+    return `<g class="ghost" style="animation-delay:-${i * 1.3}s"><path d="M${fx} ${fy}V${gy}" stroke="${t.muted}" stroke-dasharray="2 4"/><g transform="translate(${gx} ${gy})">${marker(13, t.muted, 4)}</g></g>${label(t, r2(gx + 18), r2(gy + 4), `ID ${["03", "11"][i]}`)}`;
+  }).join("");
+  const [mx0, my0] = S(mid), [, myTop] = S(mid, HC);
+  const [sx, sy] = S(still, HT), [sfx, sfy] = S(still);
+  const diagram = `${floor}
+${[120, 220, 320].map((r, i) => { const [lx, ly] = S([mid[0] + r * 0.94, mid[1] - r * 0.34]); return label(t, r2(lx + 8), r2(ly + 4), `${i + 1} M`); }).join("")}
+${ghosts}
+<path d="M${mx0} ${my0}V${myTop}" stroke="${t.foregroundSoft}" stroke-width="3" stroke-linecap="round"/>
+<path d="M${lensL.join(" ")}L${lensR.join(" ")}" stroke="${t.foregroundSoft}" stroke-width="3" stroke-linecap="round"/>
+<g class="live">
+${ray(lensL, `stroke="${t.accent}" stroke-opacity=".75" stroke-width="1.5"`)}${ray(lensR, `stroke="${t.accent}" stroke-opacity=".75" stroke-width="1.5"`)}
+<line stroke="${t.accent}" stroke-opacity=".5" stroke-dasharray="2 4">${anim("x1", (p) => S(p)[0])}${anim("y1", (p) => S(p)[1])}${anim("x2", (p) => S(p, HT)[0])}${anim("y2", (p) => S(p, HT)[1])}</line>
+<g>${marker(18, t.accent, 6)}${slide((p) => S(p, HT).join(" "))}</g>
+<text font-family="${MONO}" font-size="11" letter-spacing=".44" fill="${t.accent}">ID 07${slide((p) => { const [x, y] = S(p, HT); return `${r2(x + 26)} ${r2(y - 14)}`; })}</text>
+</g>
+<g class="still">
+<path d="M${lensL.join(" ")}L${sx} ${sy}M${lensR.join(" ")}L${sx} ${sy}" stroke="${t.accent}" stroke-opacity=".75" stroke-width="1.5"/>
+<path d="M${sfx} ${sfy}L${sx} ${sy}" stroke="${t.accent}" stroke-opacity=".5" stroke-dasharray="2 4"/>
+<g transform="translate(${sx} ${sy})">${marker(18, t.accent, 6)}</g>
 ${label(t, r2(sx + 26), r2(sy - 14), "ID 07", { color: t.accent })}
 </g>
-<path d="M${camL[0]} ${camL[1]}H${camR[0]}" stroke="${t.lineStrong}" stroke-width="2"/>
-${[camL, camR].map(([x, y]) => `<rect x="${x - 17}" y="${y - 11}" width="34" height="22" rx="6" fill="${t.surface}" stroke="${t.foregroundSoft}" stroke-width="1.5"/><circle cx="${x}" cy="${y}" r="5" fill="none" stroke="${t.accent}" stroke-width="2"/>`).join("")}
-${label(t, mid[0], 478, "BASELINE", { anchor: "middle" })}
+${camera(lensL)}${camera(lensR)}
+${label(t, mx0, r2(my0 + 30), "BASELINE", { anchor: "middle" })}
 <g font-family="${MONO}" font-size="11" letter-spacing=".44">${stages.map((name, i) => `<g class="s s${i}"><circle cx="30" cy="${30 + i * 24}" r="4"/><text x="44" y="${34 + i * 24}">${name}</text></g>`).join("")}</g>`;
   return showcase(t, {
     id: "orbit", flip: true, index: "02", eyebrow: "PERCEPTION", name: "O.R.B.I.T.",
     lines: ["Two cameras. One answer.", "Low-cost stereo perception that", "finds, ranges and tracks targets."],
     tags: "PYTHON  ·  YOLO  ·  OPENCV  ·  STEREO", cta: "Explore O.R.B.I.T.", diagram, style,
-    desc: "Top-down stereo rig. Rays from two cameras triangulate a moving target while two other tracks hold their IDs and the pipeline steps through detection and tracking.",
+    desc: "A stereo rig on a mast over a 3D floor. Rays from both cameras triangulate a floating target above its shadow while two other tracks hold their IDs and the pipeline steps through detection and tracking.",
   });
 }
 
@@ -732,38 +765,67 @@ function toolkit(t) {
 // ── Closing: a DotField that leans toward a gliding cursor ────────────────────
 
 function closing(t) {
-  const H = 480, gap = 36, loop = 14, frames = 28;
-  const cursor = (f) => {
+  const H = 480, loop = 14, frames = 28;
+  // A floor of dots in true perspective, receding to a horizon behind the headline.
+  const HORIZON = 118, FOCAL = 620, EYE = 1;
+  const view = ([x, z]) => [W / 2 + FOCAL * x / z, HORIZON + FOCAL * EYE / z];
+  const cursorWorld = (f) => {
     const a = f * 2 * Math.PI;
-    return [W / 2 + 450 * Math.cos(a), H / 2 + 170 * Math.sin(a) + 30 * Math.sin(3 * a)];
+    return [3.4 * Math.cos(a), 5.2 + 2.6 * Math.sin(a) + 0.4 * Math.sin(3 * a)];
   };
-  const cursorPath = Array.from({ length: frames + 1 }, (_, k) => cursor(k / frames).map(r2));
+  const cursorFloor = Array.from({ length: frames + 1 }, (_, k) => cursorWorld(k / frames));
+  const cursorPath = cursorFloor.map((p) => view(p).map(r2));
   const still = [];
   const live = [];
-  for (let y = 24; y < H; y += gap) {
-    for (let x = 24; x < W; x += gap) {
-      const d = Math.hypot((x - W / 2) / 1.7, y - H / 2 + 6);
-      const alpha = r2(0.05 + 0.3 * Math.min(1, Math.max(0, (d - 140) / 240)));
-      if (alpha < 0.07) continue;
-      const circle = `<circle cx="${x}" cy="${y}" r="2.2" fill-opacity="${alpha}"`;
+  const SPAN = 0.62, rows = [];
+  for (let z = 1.65; z < 15; z *= 1.17) rows.push(z);
+  const reach = (z) => (W / 2 + 40) * z / FOCAL;
+  const far = rows.at(-1), near = rows[0];
+  const lines = [];
+  for (let i = -Math.floor(reach(far) / SPAN); i * SPAN <= reach(far); i += 1) {
+    const [x0, y0] = view([i * SPAN, near]), [x1, y1] = view([i * SPAN, far]);
+    lines.push(`M${r2(x0)} ${r2(y0)}L${r2(x1)} ${r2(y1)}`);
+  }
+  for (const z of rows) {
+    const [x0, y0] = view([-reach(z), z]), [x1] = view([reach(z), z]);
+    lines.push(`M${r2(x0)} ${r2(y0)}H${r2(x1)}`);
+  }
+  for (const z of rows) {
+    for (let i = -Math.floor(reach(z) / SPAN); i * SPAN <= reach(z); i += 1) {
+      const x = i * SPAN;
+      const [sx, sy] = view([x, z]);
+      if (sy > H + 4) continue;
+      // Fade toward the horizon and behind the copy, so the type stays clear.
+      const depth = Math.min(1, Math.max(0, (15 - z) / 11));
+      const copy = Math.hypot((sx - W / 2) / 2.2, sy - 268);
+      const clear = Math.min(1, Math.max(0, (copy - 60) / 160));
+      const alpha = r2((0.08 + 0.42 * depth) * (0.3 + 0.7 * clear));
+      if (alpha < 0.05) continue;
+      const radius = r2(Math.min(3.2, Math.max(0.8, 4.6 / z)));
+      const circle = `<circle cx="${r2(sx)}" cy="${r2(sy)}" r="${radius}" fill-opacity="${alpha}"`;
       still.push(`${circle}/>`);
-      const offsets = cursorPath.map(([qx, qy]) => {
-        const dx = qx - x, dy = qy - y, dist = Math.hypot(dx, dy) || 1;
-        const pull = 14 * Math.exp(-((dist / 130) ** 2));
-        return [r2(dx / dist * pull), r2(dy / dist * pull)];
+      const offsets = cursorFloor.map(([qx, qz]) => {
+        const dx = qx - x, dz = qz - z, dist = Math.hypot(dx, dz) || 1;
+        const pull = 0.3 * Math.exp(-((dist / 1.2) ** 2));
+        const [px, py] = view([x + dx / dist * pull, z + dz / dist * pull]);
+        return [r2(px - sx), r2(py - sy)];
       });
       if (Math.max(...offsets.map(([ox, oy]) => Math.hypot(ox, oy))) < 0.8) { live.push(`${circle}/>`); continue; }
       live.push(`${circle}><animateTransform attributeName="transform" type="translate" dur="${loop}s" repeatCount="indefinite" values="${offsets.map((o) => o.join(" ")).join(";")}"/></circle>`);
     }
   }
+  const d = `M${cursorPath.map((p) => p.join(" ")).join("L")}Z`;
   const link = "CORUND207@GMAIL.COM";
   const linkHalf = (link.length * (14 * 0.6 + 0.56)) / 2;
-  const d = `M${cursorPath.map((p) => p.join(" ")).join("L")}Z`;
   const body = `<rect x=".75" y=".75" width="${W - 1.5}" height="${H - 1.5}" rx="28" fill="${t.background}" stroke="${t.lineStrong}" stroke-width="1.5"/>
 <clipPath id="closing-frame"><rect width="${W}" height="${H}" rx="28"/></clipPath>
+<defs><linearGradient id="horizon"><stop offset="0" stop-color="${t.dotEnergy}" stop-opacity="0"/><stop offset=".5" stop-color="${t.dotEnergy}" stop-opacity=".55"/><stop offset="1" stop-color="${t.dotEnergy}" stop-opacity="0"/></linearGradient></defs>
+<linearGradient id="floor-fade" gradientUnits="userSpaceOnUse" x1="0" y1="${HORIZON}" x2="0" y2="${H}"><stop offset="0" stop-color="${t.dotInk}" stop-opacity="0"/><stop offset="1" stop-color="${t.dotInk}" stop-opacity=".14"/></linearGradient>
+<g clip-path="url(#closing-frame)"><path d="${lines.join("")}" fill="none" stroke="url(#floor-fade)"/></g>
+<path d="M60 ${HORIZON}H${W - 60}" stroke="url(#horizon)" stroke-width="1.2"/>
 <g clip-path="url(#closing-frame)" fill="${t.dotInk}">
 <g class="live">${live.join("")}
-<g><circle r="16" fill="${t.dotEnergy}" fill-opacity=".12"/><circle r="5" fill="${t.dotEnergy}"/><animateMotion dur="${loop}s" repeatCount="indefinite" path="${d}" calcMode="linear" keyPoints="${cursorPath.map((_, k) => r2(k / frames)).join(";")}" keyTimes="${cursorPath.map((_, k) => r2(k / frames)).join(";")}"/></g>
+<g><ellipse rx="22" ry="7" fill="${t.dotEnergy}" fill-opacity=".16"/><circle r="5" fill="${t.dotEnergy}"/><animateMotion dur="${loop}s" repeatCount="indefinite" path="${d}" calcMode="linear" keyPoints="${cursorPath.map((_, k) => r2(k / frames)).join(";")}" keyTimes="${cursorPath.map((_, k) => r2(k / frames)).join(";")}"/></g>
 </g>
 <g class="still">${still.join("")}</g>
 </g>
@@ -775,7 +837,7 @@ function closing(t) {
 <text x="${W / 2 - 12}" y="352" text-anchor="middle" font-family="${MONO}" font-size="14" letter-spacing=".56" fill="${t.accent}">${link}</text>
 ${icon("mail", r2(W / 2 - 12 + linkHalf + 8), 340, 16, t.accent)}
 </g>`;
-  return svg(W, H, "Have a project question? Let’s build it.", "Closing chapter over a dot field that leans toward a softly gliding blue cursor, with an email link to corund207@gmail.com.", RISE, body);
+  return svg(W, H, "Have a project question? Let’s build it.", "Closing chapter over a floor of dots in perspective that ripples around a gliding blue cursor, with an email link to corund207@gmail.com.", RISE, body);
 }
 
 // ── Pill buttons ──────────────────────────────────────────────────────────────
