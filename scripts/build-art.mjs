@@ -66,14 +66,14 @@ function kinetic(text, cls, start) {
 function hero(t) {
   const H = 580, cx = W / 2, cy = 300;
   const satelliteColors = [t.tints.iris, t.tints.odyssey, t.tints.orbit, t.tints.sourcesight];
+  // Each ring is a circle of dots spun in its own plane, then tilted and foreshortened
+  // so the set reads as a gyroscope in 3D around the headline.
   const rings = [
-    { r: 150, alpha: 0.1, dur: 90, dir: 1 },
-    { r: 215, alpha: 0.13, dur: 120, dir: -1 },
-    { r: 285, alpha: 0.18, dur: 150, dir: 1, satellite: 40 },
-    { r: 360, alpha: 0.22, dur: 190, dir: -1, satellite: 205 },
-    { r: 440, alpha: 0.26, dur: 240, dir: 1, satellite: 320 },
-    { r: 525, alpha: 0.28, dur: 300, dir: -1 },
-    { r: 615, alpha: 0.3, dur: 360, dir: 1, satellite: 150 },
+    { r: 285, alpha: 0.2, dur: 150, dir: 1, satellite: 40, tilt: -14, squash: 0.3 },
+    { r: 360, alpha: 0.24, dur: 190, dir: -1, satellite: 205, tilt: 9, squash: 0.42 },
+    { r: 440, alpha: 0.27, dur: 240, dir: 1, satellite: 320, tilt: -5, squash: 0.55 },
+    { r: 525, alpha: 0.3, dur: 300, dir: -1, tilt: 16, squash: 0.36 },
+    { r: 615, alpha: 0.32, dur: 360, dir: 1, satellite: 150, tilt: -10, squash: 0.48 },
   ];
   let satellites = 0;
   const ringSvg = rings.map((ring, i) => {
@@ -82,7 +82,6 @@ function hero(t) {
     for (let k = 0; k < count; k += 1) {
       const a = (k / count) * 2 * Math.PI + i * 0.37;
       const x = r2(cx + ring.r * Math.cos(a)), y = r2(cy + ring.r * Math.sin(a));
-      if (y < -10 || y > H + 10) continue;
       dots.push(`<circle cx="${x}" cy="${y}" r="2.2"/>`);
     }
     const sat = ring.satellite === undefined ? "" : (() => {
@@ -91,7 +90,7 @@ function hero(t) {
       const color = satelliteColors[satellites++ % satelliteColors.length];
       return `<circle class="halo" cx="${x}" cy="${y}" r="4.5" fill="none" stroke="${color}" stroke-width="1.2" style="animation-delay:${r2(i * 0.7)}s"/><circle cx="${x}" cy="${y}" r="4.5" fill="${color}"/>`;
     })();
-    return `<g class="orbit" style="animation-duration:${ring.dur}s;animation-direction:${ring.dir > 0 ? "normal" : "reverse"}"><g fill="${t.dotInk}" fill-opacity="${ring.alpha}">${dots.join("")}</g>${sat}</g>`;
+    return `<g transform="translate(${cx} ${cy}) rotate(${ring.tilt}) scale(1 ${ring.squash}) translate(${-cx} ${-cy})"><circle cx="${cx}" cy="${cy}" r="${ring.r}" fill="none" stroke="${t.dotInk}" stroke-opacity="${r2(ring.alpha * 0.3)}" vector-effect="non-scaling-stroke"/><g class="orbit" style="animation-duration:${ring.dur}s;animation-direction:${ring.dir > 0 ? "normal" : "reverse"}"><g fill="${t.dotInk}" fill-opacity="${ring.alpha}">${dots.join("")}</g>${sat}</g></g>`;
   }).join("\n");
   const line1 = "I build robots.";
   const line2 = "And teach them to see.";
@@ -118,7 +117,7 @@ ${RISE}`;
 </g>
 <text class="r" style="animation-delay:.9s" x="${cx}" y="500" text-anchor="middle" font-family="${MONO}" font-size="13" letter-spacing=".52" fill="${t.foregroundSoft}">ROBOTICS  ·  COMPUTER VISION  ·  SYSTEMS SOFTWARE</text>`;
   return svg(W, H, "Jonah Chang. I build robots. And teach them to see.",
-    "Black header with the headline in huge type over slowly orbiting rings of dots, with satellites in each project's color.", style, body);
+    "Black header with the headline in huge type inside a 3D gyroscope of tilted, slowly orbiting dot rings, with satellites in each project's color.", style, body);
 }
 
 // ── Statement: the about paragraph, lit word by word ──────────────────────────
@@ -225,6 +224,254 @@ function bezierPath(segments) {
   return { d, pose, segmentEnd };
 }
 
+// ── 3D: one orthographic camera shared by the 3D pieces ───────────────────────
+// World units, z up. The camera looks down at PITCH from YAW around the vertical axis;
+// orthographic so a projected capsule stays a capsule and transforms stay affine.
+
+const YAW = 25 * Math.PI / 180, PITCH = 30 * Math.PI / 180;
+
+function project([x, y, z]) {
+  const u = x * Math.cos(YAW) - y * Math.sin(YAW);
+  const v = x * Math.sin(YAW) + y * Math.cos(YAW);
+  return [u, -(z * Math.cos(PITCH) + v * Math.sin(PITCH))];
+}
+
+// The same camera applied to a flat map (x right, y down), as an SVG matrix.
+function planeMatrix(scale, [e, f]) {
+  const [a, b] = project([scale, 0, 0]);
+  const [c, d] = project([0, -scale, 0]);
+  return `matrix(${[a, b, c, d, e, f].map(r2).join(" ")})`;
+}
+
+const add = (p, q) => p.map((v, i) => v + q[i]);
+const scl = (p, k) => p.map((v) => v * k);
+
+// ── IRIS: a six-axis arm in 3D, picking parts off a belt and sorting them ─────
+
+function iris(base) {
+  const t = tinted(base, "iris");
+  const loop = 12, F = 96, steps = 16;
+  const D1 = 0.78, A2 = 1.2, D4 = 1.12, D6 = 0.36, FINGER = 0.2, CUBE = 0.24;
+  const belt = { x0: -3, x1: -0.62, y: -1.2, w: 0.52, h: 0.4 };
+  const pick = [-1.3, belt.y, belt.h];
+  const trays = [[1.35, -0.95], [1.6, 0.35]].map(([x, y]) => ({ x, y, w: 0.66, d: 0.58, h: 0.16 }));
+  const camera = [-2.05, -0.55, 1.75];
+
+  // Tool-flange targets: fingertips straddle the cube's middle.
+  const grip = ([x, y, z]) => [x, y, z + CUBE / 2 + FINGER];
+  const lift = (p, h) => [p[0], p[1], p[2] + h];
+  const atPick = grip(pick);
+  const atTray = trays.map(({ x, y }) => grip([x, y, 0.02]));
+  const home = [0.55, -0.75, 1.55];
+  const plan = [
+    [0, home], [13, lift(atPick, 0.6)], [18, atPick], [22, atPick], [28, lift(atPick, 0.6)],
+    [38, lift(atTray[0], 0.65)], [43, atTray[0]], [46, atTray[0]], [52, home],
+    [59, lift(atPick, 0.6)], [64, atPick], [68, atPick], [74, lift(atPick, 0.6)],
+    [84, lift(atTray[1], 0.65)], [89, atTray[1]], [92, atTray[1]], [100, home],
+  ];
+
+  // Move in cylindrical coordinates so the base swings in arcs, eased per segment.
+  const cyl = ([x, y, z]) => [Math.atan2(y, x), Math.hypot(x, y), z];
+  const smooth = (u) => u * u * (3 - 2 * u);
+  const flangeAt = (time) => {
+    const k = plan.findIndex(([at], i) => i < plan.length - 1 && time <= plan[i + 1][0]);
+    const [t0, p0] = plan[k], [t1, p1] = plan[k + 1];
+    const u = smooth(t1 === t0 ? 0 : (time - t0) / (t1 - t0));
+    const [a0, r0, z0] = cyl(p0), [a1, r1, z1] = cyl(p1);
+    const da = Math.atan2(Math.sin(a1 - a0), Math.cos(a1 - a0));
+    const a = a0 + da * u, r = r0 + (r1 - r0) * u, z = z0 + (z1 - z0) * u;
+    return [r * Math.cos(a), r * Math.sin(a), z];
+  };
+  // Fingers close just after arriving and open just after the drop.
+  const held = [[19, 45.5], [65, 91.5]];
+  const closed = (time) => held.some(([a, b]) => time >= a && time < b);
+
+  // Analytic IK: spherical wrist, tool pointing straight down, fingers squared to the belt.
+  const pose = (time) => {
+    const T = flangeAt(time);
+    const Wc = [T[0], T[1], T[2] + D6];
+    const j1 = Math.atan2(Wc[1], Wc[0]);
+    const r = Math.hypot(Wc[0], Wc[1]), h = Wc[2] - D1;
+    const L = Math.min(Math.hypot(r, h), A2 + D4 - 1e-3);
+    const shoulder = Math.atan2(h, r) + Math.acos((A2 * A2 + L * L - D4 * D4) / (2 * A2 * L));
+    const S = [0, 0, D1];
+    const radial = [Math.cos(j1), Math.sin(j1), 0];
+    const E = add(S, add(scl(radial, A2 * Math.cos(shoulder)), [0, 0, A2 * Math.sin(shoulder)]));
+    const fore = Math.atan2(Wc[2] - E[2], Math.hypot(Wc[0], Wc[1]) - Math.hypot(E[0], E[1]));
+    const deg = (a) => a * 180 / Math.PI;
+    const spread = closed(time) ? CUBE / 2 + 0.015 : CUBE / 2 + 0.11;
+    const side = [1, 0, 0];
+    const fingers = [-1, 1].map((sgn) => {
+      const root = add(T, scl(side, sgn * spread));
+      return [root, add(root, [0, 0, -FINGER])];
+    });
+    const joints = [deg(j1), deg(shoulder), deg(fore - shoulder), 0, -90 - deg(fore), deg(-j1)];
+    return { S, E, W: Wc, T, fingers, joints, part: add(T, [0, 0, -FINGER]) };
+  };
+
+  // Fit everything the scene ever shows into the panel, below the labels.
+  const frames = Array.from({ length: F + 1 }, (_, f) => pose((f / F) * 100));
+  const scenery = [
+    [belt.x0, belt.y - belt.w / 2, 0], [belt.x1, belt.y + belt.w / 2, belt.h], camera, [0, 0, 0],
+    ...trays.flatMap(({ x, y, w, d }) => [[x - w / 2, y - d / 2, 0], [x + w / 2, y + d / 2, 0]]),
+  ];
+  const all = [...scenery, ...frames.flatMap(({ S, E, W, T, fingers }) => [S, E, W, T, ...fingers.flat()])].map(project);
+  const box = { top: 76, bottom: 452, left: 30, right: 610 };
+  const minU = Math.min(...all.map((p) => p[0])), maxU = Math.max(...all.map((p) => p[0]));
+  const minV = Math.min(...all.map((p) => p[1])), maxV = Math.max(...all.map((p) => p[1]));
+  const k = Math.min((box.right - box.left) / (maxU - minU), (box.bottom - box.top) / (maxV - minV));
+  const ox = (box.left + box.right) / 2 - k * (minU + maxU) / 2, oy = (box.top + box.bottom) / 2 - k * (minV + maxV) / 2;
+  const P = (p) => { const [u, v] = project(p); return [r2(ox + k * u), r2(oy + k * v)]; };
+  const V = (p) => { const [u, v] = project(p); return [r2(k * u), r2(k * v)]; };
+  const poly = (pts, attrs) => `<path d="M${pts.map((p) => P(p).join(" ")).join("L")}Z" ${attrs}/>`;
+
+  // Shaded solids: the camera sees the top, the -y face and the -x face.
+  const shades = (color, levels = [1, 0.72, 0.5]) => levels.map((o) => `fill="${color}" fill-opacity="${o}"`);
+  const solid = (pts, shade, stroke = "") => poly(pts, `fill="${t.surfaceSoft}"`) + poly(pts, `${shade} ${stroke}`);
+  const block = ([x0, y0, z0], [x1, y1, z1], color, levels, stroke = "") => {
+    const [top, front, side] = shades(color, levels);
+    return solid([[x0, y0, z1], [x1, y0, z1], [x1, y1, z1], [x0, y1, z1]], top, stroke)
+      + solid([[x0, y0, z0], [x1, y0, z0], [x1, y0, z1], [x0, y0, z1]], front, stroke)
+      + solid([[x0, y0, z0], [x0, y1, z0], [x0, y1, z1], [x0, y0, z1]], side, stroke);
+  };
+  // A cube drawn around the origin, placed later with a screen-space translate.
+  const cube = (color) => {
+    const h = CUBE / 2;
+    const [top, front, side] = shades(color);
+    const face = (pts, fill) => { const d = `M${pts.map((p) => V(p).join(" ")).join("L")}Z`; return `<path d="${d}" fill="${t.surfaceSoft}"/><path d="${d}" ${fill}/>`; };
+    return face([[-h, -h, h], [h, -h, h], [h, h, h], [-h, h, h]], top)
+      + face([[-h, -h, -h], [h, -h, -h], [h, -h, h], [-h, -h, h]], front)
+      + face([[-h, -h, -h], [-h, h, -h], [-h, h, h], [-h, -h, h]], side);
+  };
+  const cubeA = cube(t.accent), cubeB = cube(t.foregroundSoft);
+  const placed = (shape, p) => `<g transform="translate(${P(p).join(" ")})">${shape}</g>`;
+
+  // Floor grid, fading toward the back.
+  const grid = [];
+  for (let x = -3.4; x <= 2.61; x += 0.4) grid.push(`<path d="M${P([x, -2.2, 0]).join(" ")}L${P([x, 1.4, 0]).join(" ")}"/>`);
+  for (let y = -2.2; y <= 1.41; y += 0.4) grid.push(`<path d="M${P([-3.4, y, 0]).join(" ")}L${P([2.6, y, 0]).join(" ")}"/>`);
+
+  // Belt: a slab with a moving tread line along its top.
+  const beltSolid = block([belt.x0, belt.y - belt.w / 2, 0], [belt.x1, belt.y + belt.w / 2, belt.h], t.foreground, [0.12, 0.07, 0.04], `stroke="${t.lineStrong}" stroke-width="1.2" stroke-linejoin="round"`);
+  const tread = [-0.13, 0.13].map((dy) => `<path class="belt" d="M${P([belt.x0 + 0.1, belt.y + dy, belt.h]).join(" ")}L${P([belt.x1 - 0.1, belt.y + dy, belt.h]).join(" ")}" stroke="${t.muted}" stroke-width="1.5"/>`).join("");
+
+  // Trays: back walls and floor, then contents, then translucent front walls.
+  const trayBack = ({ x, y, w, d, h }) => {
+    const [x0, x1, y0, y1] = [x - w / 2, x + w / 2, y - d / 2, y + d / 2];
+    return poly([[x0, y0, 0], [x1, y0, 0], [x1, y1, 0], [x0, y1, 0]], `fill="${t.surface}" stroke="${t.lineStrong}"`)
+      + poly([[x1, y0, 0], [x1, y1, 0], [x1, y1, h], [x1, y0, h]], `fill="${t.foreground}" fill-opacity=".08" stroke="${t.lineStrong}"`)
+      + poly([[x0, y1, 0], [x1, y1, 0], [x1, y1, h], [x0, y1, h]], `fill="${t.foreground}" fill-opacity=".08" stroke="${t.lineStrong}"`);
+  };
+  const trayFront = ({ x, y, w, d, h }) => {
+    const [x0, x1, y0, y1] = [x - w / 2, x + w / 2, y - d / 2, y + d / 2];
+    return poly([[x0, y0, 0], [x1, y0, 0], [x1, y0, h], [x0, y0, h]], `fill="${t.surfaceSoft}" fill-opacity=".55" stroke="${t.lineStrong}"`)
+      + poly([[x0, y0, 0], [x0, y1, 0], [x0, y1, h], [x0, y0, h]], `fill="${t.surfaceSoft}" fill-opacity=".55" stroke="${t.lineStrong}"`);
+  };
+  const trayPart = (i) => [trays[i].x, trays[i].y, 0.02 + CUBE / 2];
+
+  // Pedestal (J1), drawn as a short cylinder.
+  const pedR = 0.34, pedH = 0.3;
+  const [pcx, pcyTop] = P([0, 0, pedH]), [, pcyBot] = P([0, 0, 0]);
+  const rx = r2(k * pedR), ry = r2(k * pedR * Math.sin(PITCH));
+  const pedestal = `<path d="M${pcx - rx} ${pcyTop}V${pcyBot}A${rx} ${ry} 0 0 0 ${pcx + rx} ${pcyBot}V${pcyTop}Z" fill="${t.surface}" stroke="${t.lineStrong}" stroke-width="1.2"/>
+<ellipse cx="${pcx}" cy="${pcyTop}" rx="${rx}" ry="${ry}" fill="${t.surfaceSoft}" stroke="${t.accent}" stroke-width="2"/>`;
+
+  // Animated primitives: SMIL values, one per frame.
+  const seq = (fn) => frames.map(fn).join(";");
+  const anim = (attr, fn) => `<animate attributeName="${attr}" dur="${loop}s" repeatCount="indefinite" values="${seq(fn)}"/>`;
+  const seg = (a, b, attrs) => `<line ${attrs}>${anim("x1", (f) => P(a(f))[0])}${anim("y1", (f) => P(a(f))[1])}${anim("x2", (f) => P(b(f))[0])}${anim("y2", (f) => P(b(f))[1])}</line>`;
+  const dot = (p, attrs) => `<circle ${attrs}>${anim("cx", (f) => P(p(f))[0])}${anim("cy", (f) => P(p(f))[1])}</circle>`;
+  const link = (a, b, width) => seg(a, b, `stroke="${t.foregroundSoft}" stroke-width="${width}" stroke-linecap="round"`)
+    + seg(a, b, `stroke="${t.surfaceSoft}" stroke-width="${Math.round(width / 4)}" stroke-linecap="round" stroke-opacity=".5"`);
+  const joint = (p, rr) => dot(p, `r="${rr}" fill="${t.surfaceSoft}" stroke="${t.accent}" stroke-width="2.5"`);
+  const along = (a, b, u) => (f) => add(a(f), scl(add(b(f), scl(a(f), -1)), u));
+  const S = (f) => f.S, E = (f) => f.E, Wr = (f) => f.W, T = (f) => f.T;
+  const rim = (f) => [pedR * Math.cos(f.joints[0] * Math.PI / 180), pedR * Math.sin(f.joints[0] * Math.PI / 180), pedH];
+  const liveArm = `${dot(rim, `r="4" fill="${t.accent}"`)}
+${seg(() => [0, 0, pedH], S, `stroke="${t.foregroundSoft}" stroke-width="22" stroke-linecap="round"`)}
+${link(S, E, 20)}
+${link(E, Wr, 16)}
+${seg(along(E, Wr, 0.2), along(E, Wr, 0.32), `stroke="${t.accent}" stroke-width="20" stroke-linecap="butt"`)}
+${link(Wr, T, 11)}
+${seg((f) => f.fingers[0][0], (f) => f.fingers[1][0], `stroke="${t.foregroundSoft}" stroke-width="6" stroke-linecap="round"`)}
+${[0, 1].map((i) => seg((f) => f.fingers[i][0], (f) => f.fingers[i][1], `stroke="${t.foregroundSoft}" stroke-width="4.5" stroke-linecap="round"`)).join("")}
+${joint(S, 11)}${joint(E, 10)}${joint(Wr, 8)}${dot(T, `r="5" fill="${t.accent}"`)}`;
+
+  // Still frame for reduced motion: part A held over its tray.
+  const still = pose(38);
+  const stillSeg = (a, b, attrs) => `<line x1="${P(a)[0]}" y1="${P(a)[1]}" x2="${P(b)[0]}" y2="${P(b)[1]}" ${attrs}/>`;
+  const stillLink = (a, b, width) => stillSeg(a, b, `stroke="${t.foregroundSoft}" stroke-width="${width}" stroke-linecap="round"`)
+    + stillSeg(a, b, `stroke="${t.surfaceSoft}" stroke-width="${Math.round(width / 4)}" stroke-linecap="round" stroke-opacity=".5"`);
+  const stillJoint = (p, rr) => `<circle cx="${P(p)[0]}" cy="${P(p)[1]}" r="${rr}" fill="${t.surfaceSoft}" stroke="${t.accent}" stroke-width="2.5"/>`;
+  const stillArm = `${stillSeg([0, 0, pedH], still.S, `stroke="${t.foregroundSoft}" stroke-width="22" stroke-linecap="round"`)}
+${stillLink(still.S, still.E, 20)}${stillLink(still.E, still.W, 16)}
+${stillSeg(add(still.E, scl(add(still.W, scl(still.E, -1)), 0.2)), add(still.E, scl(add(still.W, scl(still.E, -1)), 0.32)), `stroke="${t.accent}" stroke-width="20"`)}
+${stillLink(still.W, still.T, 11)}
+${stillSeg(still.fingers[0][0], still.fingers[1][0], `stroke="${t.foregroundSoft}" stroke-width="6" stroke-linecap="round"`)}
+${still.fingers.map(([a, b]) => stillSeg(a, b, `stroke="${t.foregroundSoft}" stroke-width="4.5" stroke-linecap="round"`)).join("")}
+${placed(cubeA, add(still.part, [0, 0, CUBE / 2 - 0.02]))}
+${stillJoint(still.S, 11)}${stillJoint(still.E, 10)}${stillJoint(still.W, 8)}`;
+
+  // Held parts ride the fingertips; screen-space translate per frame.
+  const ride = (shape, cls) => `<g class="${cls}" style="opacity:0"><g>${shape}<animateTransform attributeName="transform" type="translate" dur="${loop}s" repeatCount="indefinite" values="${seq((f) => P(add(f.part, [0, 0, CUBE / 2 - 0.02])).join(" "))}"/></g></g>`;
+
+  // Joint readout, stepped like Odyssey's pose readout.
+  const sign = (a) => `${a < 0 ? "−" : "+"}${String(Math.round(Math.abs(a))).padStart(3, "0")}°`;
+  const readout = (f, row) => [0, 1, 2].map((j) => `J${row * 3 + j + 1} ${sign(f.joints[row * 3 + j])}`).join("  ");
+  const stepFrames = Array.from({ length: steps }, (_, i) => pose((i / steps) * 100));
+
+  // Parts arrive along the belt.
+  const [bdx, bdy] = V([-1.1, 0, 0]);
+  const [cx, cy] = P(camera), [px, py] = P(pick);
+  const style = `
+@keyframes inA{0%{transform:translate(${bdx}px,${bdy}px);opacity:0}2%{opacity:1}8%,21.99%{transform:translate(0,0);opacity:1}22%,100%{transform:translate(0,0);opacity:0}}.inA{animation:inA ${loop}s ${ease.row} infinite}
+@keyframes inB{0%,45.99%{transform:translate(${bdx}px,${bdy}px);opacity:0}48%{opacity:1}54%,67.99%{transform:translate(0,0);opacity:1}68%,100%{transform:translate(0,0);opacity:0}}.inB{animation:inB ${loop}s ${ease.row} infinite}
+${[["heldA", "0%,21.99%{opacity:0}22%,45.99%{opacity:1}46%,100%{opacity:0}"], ["heldB", "0%,67.99%{opacity:0}68%,91.99%{opacity:1}92%,100%{opacity:0}"],
+    ["dropA", "0%,45.99%{opacity:0}46%,94%{opacity:1}100%{opacity:0}"], ["dropB", "0%,91.99%{opacity:0}92%,95%{opacity:1}100%{opacity:0}"],
+    ["scan", "0%,8%{opacity:0}9%{opacity:1}13%{opacity:.2}14%,54%{opacity:0}55%{opacity:1}59%{opacity:.2}60%,100%{opacity:0}"]]
+    .map(([name, frames]) => `@keyframes ${name}{${frames}}.${name}{animation:${name} ${loop}s linear infinite}`).join("\n")}
+${windowFrames("clsA", 0.09, 0.46)}.clsA{opacity:0;animation:clsA ${loop}s linear infinite}
+${windowFrames("clsB", 0.55, 0.92)}.clsB{opacity:0;animation:clsB ${loop}s linear infinite}
+.belt{stroke-dasharray:5 9;animation:belt 1.2s linear infinite}@keyframes belt{to{stroke-dashoffset:-14}}
+${Array.from({ length: steps }, (_, i) => `${windowFrames(`ij${i}`, i / steps, (i + 1) / steps)}.ij${i}{opacity:0;animation:ij${i} ${loop}s linear infinite}`).join("")}`;
+
+  const [postX, postTop] = P(camera), [, postBot] = P([camera[0], camera[1], 0]);
+  const partOnBelt = add(pick, [0, 0, CUBE / 2]);
+  const diagram = `<g stroke="${t.line}" stroke-opacity=".8">${grid.join("")}</g>
+${trays.map(trayBack).join("")}
+<g class="dropA" style="opacity:0">${placed(cubeA, trayPart(0))}</g>
+<g class="dropB" style="opacity:0">${placed(cubeB, trayPart(1))}</g>
+${trays.map(trayFront).join("")}
+${trays.map((tray, i) => { const [lx, ly] = P([tray.x, tray.y - tray.d / 2, 0]); return label(t, lx, r2(ly + 22), `CLASS ${"AB"[i]}`, { anchor: "middle" }); }).join("")}
+${beltSolid}${tread}
+<path d="M${postX} ${postBot}V${postTop}" stroke="${t.lineStrong}" stroke-width="3"/>
+<path class="scan" d="M${cx} ${cy}L${r2(px - k * 0.3)} ${r2(py)}L${r2(px + k * 0.3)} ${r2(py)}Z" fill="${t.accent}" fill-opacity=".16" opacity="0"/>
+<rect x="${cx - 18}" y="${cy - 11}" width="36" height="22" rx="6" fill="${t.surface}" stroke="${t.foregroundSoft}" stroke-width="1.5"/><circle cx="${cx}" cy="${cy}" r="5.5" fill="none" stroke="${t.accent}" stroke-width="2"/>
+<g class="live">
+${label(t, r2(cx - 26), r2(cy + 4), "→ CLASS A", { color: t.accent, cls: "clsA", anchor: "end" })}${label(t, r2(cx - 26), r2(cy + 4), "→ CLASS B", { color: t.accent, cls: "clsB", anchor: "end" })}
+<g class="inA">${placed(cubeA, partOnBelt)}</g>
+<g class="inB" style="opacity:0">${placed(cubeB, partOnBelt)}</g>
+</g>
+${pedestal}
+<g class="live">
+${liveArm}
+${ride(cubeA, "heldA")}${ride(cubeB, "heldB")}
+${stepFrames.map((f, i) => label(t, 616, 34, readout(f, 0), { anchor: "end", cls: `ij${i}` }) + label(t, 616, 54, readout(f, 1), { anchor: "end", cls: `ij${i}` })).join("")}
+</g>
+<g class="still">
+${stillArm}
+${label(t, 616, 34, readout(still, 0), { anchor: "end" })}${label(t, 616, 54, readout(still, 1), { anchor: "end" })}
+</g>
+${label(t, 24, 34, "IDENTIFY  →  PICK  →  SORT", { color: t.accent })}
+${label(t, 24, 54, "6-AXIS  ·  3D PRINTED")}`;
+  return showcase(t, {
+    id: "iris", flip: false, index: "03", eyebrow: "MANIPULATION", name: "IRIS",
+    lines: ["See it. Pick it. Sort it.", "A 3D-printed six-axis arm that", "identifies and sorts parts."],
+    tags: "3RD PLACE · ENGINEERING · MAINE STATE SCIENCE FAIR", cta: "Explore IRIS", diagram, style,
+    desc: "A six-axis arm in 3D on a floor grid. Cubes ride a conveyor, an overhead camera classifies each one, and the arm lifts it into the matching tray while a readout tracks all six joint angles.",
+  });
+}
+
 function odyssey(base) {
   const t = tinted(base, "odyssey");
   const loop = 12, steps = 16;
@@ -252,22 +499,36 @@ function odyssey(base) {
 @keyframes trail{0%{stroke-dashoffset:1;opacity:1}90%{stroke-dashoffset:.1;opacity:1}100%{stroke-dashoffset:0;opacity:0}}
 ${modes.map(([, from, to], i) => `${windowFrames(`om${i}`, from, to)}.om${i}{opacity:0;animation:om${i} ${loop}s linear infinite}`).join("")}
 ${Array.from({ length: steps }, (_, i) => `${windowFrames(`op${i}`, i / steps, (i + 1) / steps)}.op${i}{opacity:0;animation:op${i} ${loop}s linear infinite}`).join("")}`;
-  const diagram = `<rect x="${field.x}" y="${field.y}" width="${field.s}" height="${field.s}" rx="6" fill="none" stroke="${t.lineStrong}" stroke-width="2"/>
-<path d="${tiles.join("")}" stroke="${t.line}"/>
-<path d="${path.d}" fill="none" stroke="${t.lineStrong}" stroke-width="1.5" stroke-dasharray="4 7"/>
-<g fill="${t.surfaceSoft}" stroke="${t.muted}" stroke-width="1.5">${waypoints.map(([x, y]) => `<circle cx="${x}" cy="${y}" r="4"/>`).join("")}</g>
+  // Lay the field flat under the shared 3D camera and stand walls on its two near edges.
+  const fc = [field.x + field.s / 2, field.y + field.s / 2], center = [320, 262], FIELD_SCALE = 1.1;
+  const toScreen = ([x, y]) => { const [u, v] = project([(x - fc[0]) * FIELD_SCALE, (fc[1] - y) * FIELD_SCALE, 0]); return [r2(center[0] + u), r2(center[1] + v)]; };
+  const corners = [[field.x, field.y], [field.x + field.s, field.y], [field.x + field.s, field.y + field.s], [field.x, field.y + field.s]].map(toScreen);
+  const near = corners.reduce((best, c, i) => (c[1] > corners[best][1] ? i : best), 0);
+  const WALL = 16;
+  const wall = (a, b, opacity) => `<path d="M${a.join(" ")}L${b.join(" ")}L${b[0]} ${r2(b[1] + WALL)}L${a[0]} ${r2(a[1] + WALL)}Z" fill="${t.foreground}" fill-opacity="${opacity}"/>`;
+  const diagram = `<g stroke="${t.lineStrong}" stroke-width="1.2" stroke-linejoin="round">${wall(corners[(near + 3) % 4], corners[near], ".12")}${wall(corners[near], corners[(near + 1) % 4], ".2")}</g>
+<g transform="${planeMatrix(FIELD_SCALE, center)}"><g transform="translate(${-fc[0]} ${-fc[1]})">
+<rect x="${field.x}" y="${field.y}" width="${field.s}" height="${field.s}" rx="6" fill="${t.surface}" stroke="${t.lineStrong}" stroke-width="2.5"/>
+<path d="${tiles.join("")}" stroke="${t.line}" stroke-width="1.3"/>
+<path d="${path.d}" fill="none" stroke="${t.lineStrong}" stroke-width="2" stroke-dasharray="4 7"/>
+<g fill="${t.surfaceSoft}" stroke="${t.muted}" stroke-width="2">${waypoints.map(([x, y]) => `<circle cx="${x}" cy="${y}" r="5"/>`).join("")}</g>
+<g class="live">
+<path class="trail" d="${path.d}" pathLength="1" fill="none" stroke="${t.accent}" stroke-width="4.5" stroke-linecap="round"/>
+<g><circle r="46" fill="${t.accent}" fill-opacity=".08" stroke="${t.accent}" stroke-opacity=".5" stroke-dasharray="3 5"/><animateMotion dur="${loop}s" repeatCount="indefinite" path="${path.d}"/></g>
+<g><circle r="6" fill="${t.accent}"/><animateMotion dur="${loop}s" begin="-0.55s" repeatCount="indefinite" path="${path.d}"/></g>
+<g>${robot}<animateMotion dur="${loop}s" repeatCount="indefinite" rotate="auto" path="${path.d}"/></g>
+</g>
+<g class="still">
+<path d="${path.d}" fill="none" stroke="${t.accent}" stroke-width="4.5"/>
+<g transform="translate(${r2(still.x)} ${r2(still.y)}) rotate(${r2(still.heading)})">${robot}</g>
+</g>
+</g></g>
 ${label(t, 24, 474, "FIELD 144 × 144 IN")}
 <g class="live">
-<path class="trail" d="${path.d}" pathLength="1" fill="none" stroke="${t.accent}" stroke-width="3" stroke-linecap="round"/>
-<g><circle r="46" fill="${t.accent}" fill-opacity=".06" stroke="${t.accent}" stroke-opacity=".5" stroke-dasharray="3 5"/><animateMotion dur="${loop}s" repeatCount="indefinite" path="${path.d}"/></g>
-<g><circle r="5" fill="${t.accent}"/><animateMotion dur="${loop}s" begin="-0.55s" repeatCount="indefinite" path="${path.d}"/></g>
-<g>${robot}<animateMotion dur="${loop}s" repeatCount="indefinite" rotate="auto" path="${path.d}"/></g>
 ${modes.map(([name], i) => label(t, 24, 34, name, { color: t.accent, cls: `om${i}` })).join("")}
 ${Array.from({ length: steps }, (_, i) => label(t, 616, 34, readout(i / steps), { anchor: "end", cls: `op${i}` })).join("")}
 </g>
 <g class="still">
-<path d="${path.d}" fill="none" stroke="${t.accent}" stroke-width="3"/>
-<g transform="translate(${r2(still.x)} ${r2(still.y)}) rotate(${r2(still.heading)})">${robot}</g>
 ${label(t, 24, 34, "PURE PURSUIT", { color: t.accent })}
 ${label(t, 616, 34, readout(0.36), { anchor: "end" })}
 </g>`;
@@ -275,7 +536,7 @@ ${label(t, 616, 34, readout(0.36), { anchor: "end" })}
     id: "odyssey", flip: false, index: "01", eyebrow: "LOCALIZATION", name: "Odyssey",
     lines: ["Know where you are.", "Control where you go. Odometry", "and autonomous motion for VEX V5."],
     tags: "C++  ·  PROS  ·  PID  ·  PURE PURSUIT", cta: "Explore Odyssey", diagram, style,
-    desc: "Top-down VEX field. A robot drives a loop through waypoints with its lookahead circle, drawing its trail while the controller mode and pose readout update.",
+    desc: "A VEX field in 3D with walls on its near edges. A robot drives a loop through waypoints with its lookahead circle, drawing its trail while the controller mode and pose readout update.",
   });
 }
 
@@ -327,91 +588,6 @@ ${label(t, mid[0], 478, "BASELINE", { anchor: "middle" })}
     lines: ["Two cameras. One answer.", "Low-cost stereo perception that", "finds, ranges and tracks targets."],
     tags: "PYTHON  ·  YOLO  ·  OPENCV  ·  STEREO", cta: "Explore O.R.B.I.T.", diagram, style,
     desc: "Top-down stereo rig. Rays from two cameras triangulate a moving target while two other tracks hold their IDs and the pipeline steps through detection and tracking.",
-  });
-}
-
-function iris(base) {
-  const t = tinted(base, "iris");
-  const loop = 12;
-  const S = [320, 290], L1 = 132, L2 = 122, GRIP = 30;
-  const beltTop = 390, binFloor = 440;
-  const pick = [210, beltTop - 10], binA = [448, binFloor - 12], binB = [556, binFloor - 12];
-  const wrist = ([x, y], lift = 0) => [x, y - GRIP - lift];
-  const norm = (a) => ((a + 180) % 360 + 360) % 360 - 180;
-  const ik = ([x, y]) => {
-    const dx = x - S[0], dy = y - S[1], d = Math.min(Math.hypot(dx, dy), L1 + L2 - 1);
-    const cosE = (d * d - L1 * L1 - L2 * L2) / (2 * L1 * L2);
-    const options = [1, -1].map((sign) => {
-      const e = sign * Math.acos(Math.max(-1, Math.min(1, cosE)));
-      const a1 = Math.atan2(dy, dx) - Math.atan2(L2 * Math.sin(e), L1 + L2 * Math.cos(e));
-      return { a1: a1 * 180 / Math.PI, a2: e * 180 / Math.PI, elbowY: S[1] + L1 * Math.sin(a1) };
-    });
-    const best = options.sort((a, b) => a.elbowY - b.elbowY)[0];
-    return [best.a1, best.a2, 90 - best.a1 - best.a2];
-  };
-  const home = [330, 150];
-  const plan = [
-    [0, home], [13, wrist(pick, 70)], [18, wrist(pick)], [22, wrist(pick)], [28, wrist(pick, 90)],
-    [38, wrist(binA, 110)], [43, wrist(binA)], [46, wrist(binA)], [52, home],
-    [59, wrist(pick, 70)], [64, wrist(pick)], [68, wrist(pick)], [74, wrist(pick, 90)],
-    [84, wrist(binB, 110)], [89, wrist(binB)], [92, wrist(binB)], [100, home],
-  ];
-  const poses = [];
-  for (const [at, target] of plan) {
-    const angles = ik(target);
-    const prev = poses.at(-1)?.angles;
-    poses.push({ at, angles: angles.map((a, j) => (prev ? prev[j] + norm(a - prev[j]) : norm(a))) });
-  }
-  const [h1, h2, h3] = poses[0].angles.map(r2);
-  const partA = (x, y) => `<rect x="${x - 11}" y="${y - 11}" width="22" height="22" rx="5" fill="${t.accent}"/>`;
-  const partB = (x, y) => `<circle cx="${x}" cy="${y}" r="11" fill="${t.foregroundSoft}"/>`;
-  const link = (length) => `<path d="M0 0H${length}" stroke="${t.foregroundSoft}" stroke-width="14" stroke-linecap="round"/><path d="M0 0H${length}" stroke="${t.surfaceSoft}" stroke-width="4" stroke-linecap="round" stroke-opacity=".5"/>`;
-  const jointDot = `<circle r="8" fill="${t.surfaceSoft}" stroke="${t.accent}" stroke-width="2.5"/>`;
-  const vis = (name, frames) => `@keyframes ${name}{${frames}}.${name}{animation:${name} ${loop}s linear infinite}`;
-  const style = `
-${[0, 1, 2].map((j) => `@keyframes j${j}{${poses.map(({ at, angles }) => `${at}%{transform:rotate(${r2(angles[j])}deg)}`).join("")}}.j${j}{animation:j${j} ${loop}s ease-in-out infinite}`).join("")}
-@keyframes inA{0%{transform:translateX(-150px);opacity:0}2%{opacity:1}8%,21.99%{transform:translateX(0);opacity:1}22%,100%{transform:translateX(0);opacity:0}}.inA{animation:inA ${loop}s ${ease.row} infinite}
-@keyframes inB{0%,45.99%{transform:translateX(-150px);opacity:0}46%{transform:translateX(-150px);opacity:0}48%{opacity:1}54%,67.99%{transform:translateX(0);opacity:1}68%,100%{transform:translateX(0);opacity:0}}.inB{animation:inB ${loop}s ${ease.row} infinite}
-${vis("heldA", "0%,21.99%{opacity:0}22%,45.99%{opacity:1}46%,100%{opacity:0}")}
-${vis("heldB", "0%,67.99%{opacity:0}68%,91.99%{opacity:1}92%,100%{opacity:0}")}
-${vis("dropA", "0%,45.99%{opacity:0}46%,94%{opacity:1}100%{opacity:0}")}
-${vis("dropB", "0%,91.99%{opacity:0}92%,95%{opacity:1}100%{opacity:0}")}
-${vis("scan", "0%,8%{opacity:0}9%{opacity:1}13%{opacity:.2}14%,54%{opacity:0}55%{opacity:1}59%{opacity:.2}60%,100%{opacity:0}")}
-${windowFrames("clsA", 0.09, 0.46)}.clsA{opacity:0;animation:clsA ${loop}s linear infinite}
-${windowFrames("clsB", 0.55, 0.92)}.clsB{opacity:0;animation:clsB ${loop}s linear infinite}
-.belt{stroke-dasharray:4 10;animation:belt 1.2s linear infinite}@keyframes belt{to{stroke-dashoffset:-14}}`;
-  const cam = [210, 96];
-  const diagram = `<path d="M0 ${binFloor}H${PANEL.w}" stroke="${t.line}"/>
-<rect x="36" y="${beltTop}" width="206" height="22" rx="11" fill="none" stroke="${t.lineStrong}" stroke-width="2"/>
-<path class="belt" d="M48 ${beltTop + 11}H230" stroke="${t.muted}" stroke-width="2"/>
-<path d="M${binA[0] - 38} 384V${binFloor}H${binA[0] + 38}V384M${binB[0] - 38} 384V${binFloor}H${binB[0] + 38}V384" fill="none" stroke="${t.lineStrong}" stroke-width="2"/>
-${label(t, binA[0], 468, "CLASS A", { anchor: "middle" })}${label(t, binB[0], 468, "CLASS B", { anchor: "middle" })}
-<path class="scan" d="M${cam[0] - 8} ${cam[1] + 12}L${pick[0] - 40} ${beltTop - 2}H${pick[0] + 40}L${cam[0] + 8} ${cam[1] + 12}Z" fill="${t.accent}" fill-opacity=".14" opacity="0"/>
-<rect x="${cam[0] - 20}" y="${cam[1] - 12}" width="40" height="24" rx="6" fill="${t.surface}" stroke="${t.foregroundSoft}" stroke-width="1.5"/><circle cx="${cam[0]}" cy="${cam[1]}" r="6" fill="none" stroke="${t.accent}" stroke-width="2"/>
-<path d="M${cam[0]} ${cam[1] - 12}V0" stroke="${t.lineStrong}" stroke-width="2"/>
-<g class="live">${label(t, cam[0] + 32, cam[1] + 4, "→ CLASS A", { color: t.accent, cls: "clsA" })}${label(t, cam[0] + 32, cam[1] + 4, "→ CLASS B", { color: t.accent, cls: "clsB" })}</g>
-<g class="inA">${partA(...pick)}</g>
-<g class="inB" style="opacity:0">${partB(...pick)}</g>
-<g class="dropA" style="opacity:0">${partA(...binA)}</g>
-<g class="dropB" style="opacity:0">${partB(...binB)}</g>
-<rect x="${S[0] - 24}" y="${S[1] + 8}" width="48" height="${binFloor - S[1] - 8}" rx="8" fill="${t.foreground}" fill-opacity=".12"/>
-<g transform="translate(${S[0]} ${S[1]})"><g class="j0" transform="rotate(${h1})">
-${link(L1)}
-<g transform="translate(${L1} 0)"><g class="j1" transform="rotate(${h2})">
-${link(L2)}
-<g transform="translate(${L2} 0)"><g class="j2" transform="rotate(${h3})">
-<path d="M0 0H16M16 -14V14M16 -14H42M16 14H42" fill="none" stroke="${t.foregroundSoft}" stroke-width="3.5" stroke-linecap="round"/>
-<g class="heldA" style="opacity:0">${partA(GRIP, 0)}</g><g class="heldB" style="opacity:0">${partB(GRIP, 0)}</g>
-</g>${jointDot}</g>
-</g>${jointDot}</g>
-</g>${jointDot}</g>
-${label(t, 24, 34, "IDENTIFY  →  PICK  →  SORT", { color: t.accent })}
-${label(t, 616, 34, "6-DOF  ·  3D PRINTED", { anchor: "end" })}`;
-  return showcase(t, {
-    id: "iris", flip: false, index: "03", eyebrow: "MANIPULATION", name: "IRIS",
-    lines: ["See it. Pick it. Sort it.", "A 3D-printed arm for autonomous", "identification and sorting."],
-    tags: "3RD PLACE · ENGINEERING · MAINE STATE SCIENCE FAIR", cta: "Explore IRIS", diagram, style,
-    desc: "Parts arrive on a conveyor, a camera classifies each one, and the arm lifts it into the matching bin.",
   });
 }
 
