@@ -20,8 +20,8 @@
 @keyframes c0{0%{opacity:1}31.99%{opacity:1}32%{opacity:0}100%{opacity:0}}.c0{animation:c0 11s linear infinite}@keyframes c1{0%{opacity:0}31.99%{opacity:0}32%{opacity:1}45.99%{opacity:1}46%{opacity:0}100%{opacity:0}}.c1{animation:c1 11s linear infinite}@keyframes c2{0%{opacity:0}45.99%{opacity:0}46%{opacity:1}59.99%{opacity:1}60%{opacity:0}100%{opacity:0}}.c2{animation:c2 11s linear infinite}@keyframes c3{0%{opacity:0}59.99%{opacity:0}60%{opacity:1}73.99%{opacity:1}74%{opacity:0}100%{opacity:0}}.c3{animation:c3 11s linear infinite}@keyframes c4{0%{opacity:0}73.99%{opacity:0}74%{opacity:1}91.99%{opacity:1}92%{opacity:0}100%{opacity:0}}.c4{animation:c4 11s linear infinite}@keyframes c5{0%{opacity:0}91.99%{opacity:0}92%{opacity:1}99.99%{opacity:1}100%{opacity:1}100%{opacity:1}}.c5{animation:c5 11s linear infinite}.still{display:none}@media (prefers-reduced-motion:reduce){*{animation:none!important}.live{display:none}.still{display:inline}}</style>
 <rect width="1200" height="580" rx="28" fill="#f5f5f7"/>
 <g class="r">
-<text x="744" y="168" font-family="'SFMono-Regular', ui-monospace, Menlo, Monaco, Consolas, monospace" font-size="13" letter-spacing=".52" fill="#0066cc">04  ·  PRODUCT</text>
-<text x="740" y="262" font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="84" font-weight="520" letter-spacing="-4.4" fill="#000000">CalmList</text>
+<text x="744" y="168" font-family="'SFMono-Regular', ui-monospace, Menlo, Monaco, Consolas, monospace" font-size="13" letter-spacing=".52" fill="#4b49c9">04  ·  PRODUCT</text>
+<text x="740" y="262" font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="84" font-weight="600" letter-spacing="-3.2" fill="#000000">CalmList</text>
 </g>
 <g class="r" style="animation-delay:.08s">
 <g font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="24" fill="#6e6e73"><text x="744" y="318">Less noise. More done.</text><text x="744" y="352">A keyboard-first task manager</text><text x="744" y="386">with self-hostable sync.</text></g>
@@ -39,37 +39,37 @@
 <path d="M30 70H610M190 70V470" stroke="rgba(0, 0, 0, 0.12)"/>
 <g fill="rgba(0, 0, 0, 0.2)"><circle cx="52" cy="50" r="5.5"/><circle cx="70" cy="50" r="5.5"/><circle cx="88" cy="50" r="5.5"/></g>
 <text x="320" y="54" font-family="'SFMono-Regular', ui-monospace, Menlo, Monaco, Consolas, monospace" font-size="11" letter-spacing=".44" fill="#6e6e73" text-anchor="middle" xml:space="preserve">CALMLIST</text>
-<g font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="15"><text x="54" y="108" fill="#424245">Inbox</text><rect x="40" y="124" width="140" height="30" rx="8" fill="rgba(0, 0, 0, 0.05)"/><text x="54" y="144" fill="#0066cc" font-weight="500">Today</text><text x="54" y="180" fill="#424245">Upcoming</text><text x="54" y="216" fill="#424245">Projects</text></g>
+<g font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="15"><text x="54" y="108" fill="#424245">Inbox</text><rect x="40" y="124" width="140" height="30" rx="8" fill="rgba(0, 0, 0, 0.05)"/><text x="54" y="144" fill="#4b49c9" font-weight="500">Today</text><text x="54" y="180" fill="#424245">Upcoming</text><text x="54" y="216" fill="#424245">Projects</text></g>
 <text x="54" y="448" font-family="'SFMono-Regular', ui-monospace, Menlo, Monaco, Consolas, monospace" font-size="11" letter-spacing=".44" fill="#6e6e73" xml:space="preserve">LOCAL-FIRST</text>
-<text x="218" y="124" font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="30" font-weight="520" letter-spacing="-1" fill="#000000">Today</text>
+<text x="218" y="124" font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="30" font-weight="600" letter-spacing="-.8" fill="#000000">Today</text>
 <g class="live"><text class="count c0" x="586" y="122" font-family="'SFMono-Regular', ui-monospace, Menlo, Monaco, Consolas, monospace" font-size="11" letter-spacing=".44" fill="#6e6e73" text-anchor="end" xml:space="preserve">3 OPEN</text><text class="count c1" x="586" y="122" font-family="'SFMono-Regular', ui-monospace, Menlo, Monaco, Consolas, monospace" font-size="11" letter-spacing=".44" fill="#6e6e73" text-anchor="end" xml:space="preserve">4 OPEN</text><text class="count c2" x="586" y="122" font-family="'SFMono-Regular', ui-monospace, Menlo, Monaco, Consolas, monospace" font-size="11" letter-spacing=".44" fill="#6e6e73" text-anchor="end" xml:space="preserve">3 OPEN</text><text class="count c3" x="586" y="122" font-family="'SFMono-Regular', ui-monospace, Menlo, Monaco, Consolas, monospace" font-size="11" letter-spacing=".44" fill="#6e6e73" text-anchor="end" xml:space="preserve">2 OPEN</text><text class="count c4" x="586" y="122" font-family="'SFMono-Regular', ui-monospace, Menlo, Monaco, Consolas, monospace" font-size="11" letter-spacing=".44" fill="#6e6e73" text-anchor="end" xml:space="preserve">1 OPEN</text><text class="count c5" x="586" y="122" font-family="'SFMono-Regular', ui-monospace, Menlo, Monaco, Consolas, monospace" font-size="11" letter-spacing=".44" fill="#6e6e73" text-anchor="end" xml:space="preserve">3 OPEN</text></g>
 <rect x="212" y="146" width="374" height="40" rx="10" fill="none" stroke="rgba(29, 29, 31, 0.45)" stroke-width="1.2"/>
 <rect x="540" y="156" width="40" height="20" rx="5" fill="none" stroke="rgba(0, 0, 0, 0.12)"/><text x="560" y="170" font-family="'SFMono-Regular', ui-monospace, Menlo, Monaco, Consolas, monospace" font-size="11" letter-spacing=".44" fill="#6e6e73" text-anchor="middle" xml:space="preserve">⌘K</text>
 <g class="live typed"><text x="226" y="172" font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="16" fill="#1d1d1f">Order new drive bearings</text>
 <rect class="cover" x="225" y="152" width="188.8" height="28" fill="#ffffff"/>
-<rect class="caret" x="226" y="157" width="1.5" height="19" fill="#0066cc"/></g>
+<rect class="caret" x="226" y="157" width="1.5" height="19" fill="#4b49c9"/></g>
 <g class="new live"><g class="">
 <circle cx="230" cy="214" r="10" fill="none" stroke="rgba(29, 29, 31, 0.45)" stroke-width="1.5"/>
-<circle class="fill f0" cx="230" cy="214" r="10.75" fill="#0066cc"/>
+<circle class="fill f0" cx="230" cy="214" r="10.75" fill="#4b49c9"/>
 <path class="tick k0" pathLength="1" d="M225 214l3.5 3.5 6.5-6.5" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
 <text class="x0" x="256" y="220" font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="17" fill="#1d1d1f">Order new drive bearings</text>
 <path class="strike k0" pathLength="1" d="M256 214h182.4" stroke="#6e6e73" stroke-width="1.5"/>
 </g></g>
 <g class="push"><g class="">
 <circle cx="230" cy="214" r="10" fill="none" stroke="rgba(29, 29, 31, 0.45)" stroke-width="1.5"/>
-<circle class="fill f1" cx="230" cy="214" r="10.75" fill="#0066cc"/>
+<circle class="fill f1" cx="230" cy="214" r="10.75" fill="#4b49c9"/>
 <path class="tick k1" pathLength="1" d="M225 214l3.5 3.5 6.5-6.5" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
 <text class="x1" x="256" y="220" font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="17" fill="#1d1d1f">Tune pure pursuit lookahead</text>
 <path class="strike k1" pathLength="1" d="M256 214h205.2" stroke="#6e6e73" stroke-width="1.5"/>
 </g><g class="">
 <circle cx="230" cy="264" r="10" fill="none" stroke="rgba(29, 29, 31, 0.45)" stroke-width="1.5"/>
-<circle class="fill f2" cx="230" cy="264" r="10.75" fill="#0066cc"/>
+<circle class="fill f2" cx="230" cy="264" r="10.75" fill="#4b49c9"/>
 <path class="tick k2" pathLength="1" d="M225 264l3.5 3.5 6.5-6.5" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
 <text class="x2" x="256" y="270" font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="17" fill="#1d1d1f">Print a new intake roller</text>
 <path class="strike k2" pathLength="1" d="M256 264h190" stroke="#6e6e73" stroke-width="1.5"/>
 </g><g class="">
 <circle cx="230" cy="314" r="10" fill="none" stroke="rgba(29, 29, 31, 0.45)" stroke-width="1.5"/>
-<circle class="fill f3" cx="230" cy="314" r="10.75" fill="#0066cc"/>
+<circle class="fill f3" cx="230" cy="314" r="10.75" fill="#4b49c9"/>
 <path class="tick k3" pathLength="1" d="M225 314l3.5 3.5 6.5-6.5" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
 <text class="x3" x="256" y="320" font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="17" fill="#1d1d1f">Recalibrate the stereo pair</text>
 <path class="strike k3" pathLength="1" d="M256 314h205.2" stroke="#6e6e73" stroke-width="1.5"/>

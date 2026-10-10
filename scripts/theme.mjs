@@ -14,7 +14,7 @@ export const themes = {
     foreground: "#f5f5f7",
     foregroundSoft: "#d2d2d7",
     foregroundBright: "#ffffff",
-    muted: "#86868b",
+    muted: "#a1a1a6",
     accent: "#2997ff",
     accentBright: "#64b5ff",
     action: "#0071e3",
@@ -25,6 +25,8 @@ export const themes = {
     hoverWash: "rgba(245, 245, 247, 0.06)",
     dotInk: "#f5f5f7",
     dotEnergy: "#2997ff",
+    // Project colors, shared with the portfolio site.
+    tints: { iris: "#bf5af2", odyssey: "#30d158", orbit: "#ff9f0a", sourcesight: "#64d2ff", vortex: "#ff375f", calmlist: "#7d7aff" },
   },
   light: {
     id: "light",
@@ -46,6 +48,8 @@ export const themes = {
     hoverWash: "rgba(0, 0, 0, 0.05)",
     dotInk: "#1d1d1f",
     dotEnergy: "#0066cc",
+    // Darker cuts of the same hues so small text holds contrast on light surfaces.
+    tints: { iris: "#8a2fc0", odyssey: "#1a7a33", orbit: "#a64f00", sourcesight: "#08708f", vortex: "#c4173f", calmlist: "#4b49c9" },
   },
 };
 
@@ -54,5 +58,8 @@ export const ease = {
   reveal: "cubic-bezier(0.215, 0.61, 0.355, 1)",
   row: "cubic-bezier(0.25, 0.46, 0.45, 0.94)",
 };
+
+// Swaps the theme accent for one project's color.
+export const tinted = (t, project) => ({ ...t, accent: t.tints[project], accentBright: t.tints[project], dotEnergy: t.tints[project] });
 
 export const esc = (value) => String(value).replace(/[&<>"']/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&apos;" })[char]);

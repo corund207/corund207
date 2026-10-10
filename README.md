@@ -2,6 +2,7 @@
 
 <p align="center">
   <a href="https://jonahchang207.vercel.app/"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/button-portfolio-dark.svg"><source media="(prefers-color-scheme: light)" srcset="assets/button-portfolio-light.svg"><img alt="Visit Portfolio" src="assets/button-portfolio-dark.svg" height="48"></picture></a>
+  <a href="mailto:corund207@gmail.com"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/button-email-dark.svg"><source media="(prefers-color-scheme: light)" srcset="assets/button-email-light.svg"><img alt="Email Me" src="assets/button-email-dark.svg" height="48"></picture></a>
   <a href="https://github.com/corund207?tab=repositories"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/button-repositories-dark.svg"><source media="(prefers-color-scheme: light)" srcset="assets/button-repositories-light.svg"><img alt="View Repositories" src="assets/button-repositories-dark.svg" height="48"></picture></a>
 </p>
 
@@ -31,6 +32,10 @@
   <a href="https://github.com/corund207/Harbor"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/tile-harbor-dark.svg"><source media="(prefers-color-scheme: light)" srcset="assets/tile-harbor-light.svg"><img alt="Harbor. Local media download and conversion built on YoutubeExplode and ffmpeg." src="assets/tile-harbor-dark.svg" width="49%"></picture></a>
   <a href="https://github.com/corund207?tab=repositories&q=omarchy"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/tile-desktops-dark.svg"><source media="(prefers-color-scheme: light)" srcset="assets/tile-desktops-light.svg"><img alt="Omarchy desktops. Four Hyprland themes with their own bars, motion and screensavers." src="assets/tile-desktops-dark.svg" width="49%"></picture></a>
 </p>
+<p align="center">
+  <a href="https://github.com/corund207/VEXVortex"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/tile-vexvortex-dark.svg"><source media="(prefers-color-scheme: light)" srcset="assets/tile-vexvortex-light.svg"><img alt="VEXVortex. Competition data and analytics for VEX events, from the RobotEvents API." src="assets/tile-vexvortex-dark.svg" width="49%"></picture></a>
+  <a href="https://github.com/corund207/Reticly"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/tile-reticly-dark.svg"><source media="(prefers-color-scheme: light)" srcset="assets/tile-reticly-light.svg"><img alt="Reticly. A free, open-source crosshair overlay for Windows with recoil tracking." src="assets/tile-reticly-dark.svg" width="49%"></picture></a>
+</p>
 
 <picture><source media="(prefers-color-scheme: dark)" srcset="assets/chapter-toolkit-dark.svg"><source media="(prefers-color-scheme: light)" srcset="assets/chapter-toolkit-light.svg"><img alt="Toolkit." src="assets/chapter-toolkit-dark.svg" width="100%"></picture>
 
@@ -42,4 +47,4 @@
 
 <br>
 
-<a href="https://jonahchang207.vercel.app/"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/closing-dark.svg"><source media="(prefers-color-scheme: light)" srcset="assets/closing-light.svg"><img alt="Have a project question? Let’s build it. jonahchang207.vercel.app" src="assets/closing-dark.svg" width="100%"></picture></a>
+<a href="mailto:corund207@gmail.com"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/closing-dark.svg"><source media="(prefers-color-scheme: light)" srcset="assets/closing-light.svg"><img alt="Have a project question? Let’s build it. Email corund207@gmail.com" src="assets/closing-dark.svg" width="100%"></picture></a>

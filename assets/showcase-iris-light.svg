@@ -15,8 +15,8 @@
 .belt{stroke-dasharray:4 10;animation:belt 1.2s linear infinite}@keyframes belt{to{stroke-dashoffset:-14}}.still{display:none}@media (prefers-reduced-motion:reduce){*{animation:none!important}.live{display:none}.still{display:inline}}</style>
 <rect width="1200" height="580" rx="28" fill="#f5f5f7"/>
 <g class="r">
-<text x="64" y="168" font-family="'SFMono-Regular', ui-monospace, Menlo, Monaco, Consolas, monospace" font-size="13" letter-spacing=".52" fill="#0066cc">03  ·  MANIPULATION</text>
-<text x="60" y="262" font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="84" font-weight="520" letter-spacing="-4.4" fill="#000000">IRIS</text>
+<text x="64" y="168" font-family="'SFMono-Regular', ui-monospace, Menlo, Monaco, Consolas, monospace" font-size="13" letter-spacing=".52" fill="#8a2fc0">03  ·  MANIPULATION</text>
+<text x="60" y="262" font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="84" font-weight="600" letter-spacing="-3.2" fill="#000000">IRIS</text>
 </g>
 <g class="r" style="animation-delay:.08s">
 <g font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="24" fill="#6e6e73"><text x="64" y="318">See it. Pick it. Sort it.</text><text x="64" y="352">A 3D-printed arm for autonomous</text><text x="64" y="386">identification and sorting.</text></g>
@@ -35,13 +35,13 @@
 <path class="belt" d="M48 401H230" stroke="#6e6e73" stroke-width="2"/>
 <path d="M410 384V440H486V384M518 384V440H594V384" fill="none" stroke="rgba(0, 0, 0, 0.2)" stroke-width="2"/>
 <text x="448" y="468" font-family="'SFMono-Regular', ui-monospace, Menlo, Monaco, Consolas, monospace" font-size="11" letter-spacing=".44" fill="#6e6e73" text-anchor="middle" xml:space="preserve">CLASS A</text><text x="556" y="468" font-family="'SFMono-Regular', ui-monospace, Menlo, Monaco, Consolas, monospace" font-size="11" letter-spacing=".44" fill="#6e6e73" text-anchor="middle" xml:space="preserve">CLASS B</text>
-<path class="scan" d="M202 108L170 388H250L218 108Z" fill="#0066cc" fill-opacity=".14" opacity="0"/>
-<rect x="190" y="84" width="40" height="24" rx="6" fill="#f5f5f7" stroke="#424245" stroke-width="1.5"/><circle cx="210" cy="96" r="6" fill="none" stroke="#0066cc" stroke-width="2"/>
+<path class="scan" d="M202 108L170 388H250L218 108Z" fill="#8a2fc0" fill-opacity=".14" opacity="0"/>
+<rect x="190" y="84" width="40" height="24" rx="6" fill="#f5f5f7" stroke="#424245" stroke-width="1.5"/><circle cx="210" cy="96" r="6" fill="none" stroke="#8a2fc0" stroke-width="2"/>
 <path d="M210 84V0" stroke="rgba(0, 0, 0, 0.2)" stroke-width="2"/>
-<g class="live"><text class="clsA" x="242" y="100" font-family="'SFMono-Regular', ui-monospace, Menlo, Monaco, Consolas, monospace" font-size="11" letter-spacing=".44" fill="#0066cc" xml:space="preserve">→ CLASS A</text><text class="clsB" x="242" y="100" font-family="'SFMono-Regular', ui-monospace, Menlo, Monaco, Consolas, monospace" font-size="11" letter-spacing=".44" fill="#0066cc" xml:space="preserve">→ CLASS B</text></g>
-<g class="inA"><rect x="199" y="369" width="22" height="22" rx="5" fill="#0066cc"/></g>
+<g class="live"><text class="clsA" x="242" y="100" font-family="'SFMono-Regular', ui-monospace, Menlo, Monaco, Consolas, monospace" font-size="11" letter-spacing=".44" fill="#8a2fc0" xml:space="preserve">→ CLASS A</text><text class="clsB" x="242" y="100" font-family="'SFMono-Regular', ui-monospace, Menlo, Monaco, Consolas, monospace" font-size="11" letter-spacing=".44" fill="#8a2fc0" xml:space="preserve">→ CLASS B</text></g>
+<g class="inA"><rect x="199" y="369" width="22" height="22" rx="5" fill="#8a2fc0"/></g>
 <g class="inB" style="opacity:0"><circle cx="210" cy="380" r="11" fill="#424245"/></g>
-<g class="dropA" style="opacity:0"><rect x="437" y="417" width="22" height="22" rx="5" fill="#0066cc"/></g>
+<g class="dropA" style="opacity:0"><rect x="437" y="417" width="22" height="22" rx="5" fill="#8a2fc0"/></g>
 <g class="dropB" style="opacity:0"><circle cx="556" cy="428" r="11" fill="#424245"/></g>
 <rect x="296" y="298" width="48" height="142" rx="8" fill="#1d1d1f" fill-opacity=".12"/>
 <g transform="translate(320 290)"><g class="j0" transform="rotate(-139.03)">
@@ -50,11 +50,11 @@
 <path d="M0 0H122" stroke="#424245" stroke-width="14" stroke-linecap="round"/><path d="M0 0H122" stroke="#fbfbfd" stroke-width="4" stroke-linecap="round" stroke-opacity=".5"/>
 <g transform="translate(122 0)"><g class="j2" transform="rotate(115.98)">
 <path d="M0 0H16M16 -14V14M16 -14H42M16 14H42" fill="none" stroke="#424245" stroke-width="3.5" stroke-linecap="round"/>
-<g class="heldA" style="opacity:0"><rect x="19" y="-11" width="22" height="22" rx="5" fill="#0066cc"/></g><g class="heldB" style="opacity:0"><circle cx="30" cy="0" r="11" fill="#424245"/></g>
-</g><circle r="8" fill="#fbfbfd" stroke="#0066cc" stroke-width="2.5"/></g>
-</g><circle r="8" fill="#fbfbfd" stroke="#0066cc" stroke-width="2.5"/></g>
-</g><circle r="8" fill="#fbfbfd" stroke="#0066cc" stroke-width="2.5"/></g>
-<text x="24" y="34" font-family="'SFMono-Regular', ui-monospace, Menlo, Monaco, Consolas, monospace" font-size="11" letter-spacing=".44" fill="#0066cc" xml:space="preserve">IDENTIFY  →  PICK  →  SORT</text>
+<g class="heldA" style="opacity:0"><rect x="19" y="-11" width="22" height="22" rx="5" fill="#8a2fc0"/></g><g class="heldB" style="opacity:0"><circle cx="30" cy="0" r="11" fill="#424245"/></g>
+</g><circle r="8" fill="#fbfbfd" stroke="#8a2fc0" stroke-width="2.5"/></g>
+</g><circle r="8" fill="#fbfbfd" stroke="#8a2fc0" stroke-width="2.5"/></g>
+</g><circle r="8" fill="#fbfbfd" stroke="#8a2fc0" stroke-width="2.5"/></g>
+<text x="24" y="34" font-family="'SFMono-Regular', ui-monospace, Menlo, Monaco, Consolas, monospace" font-size="11" letter-spacing=".44" fill="#8a2fc0" xml:space="preserve">IDENTIFY  →  PICK  →  SORT</text>
 <text x="616" y="34" font-family="'SFMono-Regular', ui-monospace, Menlo, Monaco, Consolas, monospace" font-size="11" letter-spacing=".44" fill="#6e6e73" text-anchor="end" xml:space="preserve">6-DOF  ·  3D PRINTED</text></g>
 </g>
 </svg>

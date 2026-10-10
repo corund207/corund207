@@ -103,11 +103,11 @@ export function renderActivity({ projects, total }, { start, end }, t = themes.d
       <rect x="342" y="${y - 10}" width="364" height="8" rx="4" fill="${t.well}"/>
       <rect class="bar" style="animation-delay:${(0.3 + row * 0.05).toFixed(2)}s" x="342" y="${y - 10}" width="${(project.count / maxCount * 364).toFixed(2)}" height="8" rx="4" fill="${t.accent}"/>
       ${cells}
-      <text x="1156" y="${y}" fill="${t.foregroundBright}" font-size="18" font-weight="520" text-anchor="end">${project.count}</text>
+      <text x="1156" y="${y}" fill="${t.foregroundBright}" font-size="18" font-weight="600" text-anchor="end">${project.count}</text>
     </g>`;
   }).join("\n");
   return `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="${height}" viewBox="0 0 1200 ${height}" role="img" aria-labelledby="title desc">
-  <title id="title">Public code activity — last 13 weeks</title>
+  <title id="title">Public code activity, last 13 weeks</title>
   <desc id="desc">${total} authored commits across ${projects.length} repositories, ${dateLabel(start)} through ${dateLabel(end)} UTC. Weekly totals: ${weekly.join(", ")}. Owned public non-fork, non-archived repositories, default branches only. Generated profile refreshes excluded. ${esc(projects.map((p) => p.name + ": " + p.count).join("; "))}</desc>
   <style>
     .row{animation:rise .65s ${ease.row} backwards}
@@ -121,9 +121,9 @@ export function renderActivity({ projects, total }, { start, end }, t = themes.d
   </style>
   <rect width="1200" height="${height}" rx="28" fill="${t.surface}"/>
   <g font-family="${SANS}">
-    <text x="44" y="68" fill="${t.accent}" font-family="${MONO}" font-size="12" letter-spacing=".5">PUBLIC CODE ACTIVITY  ·  ${dateLabel(start)} — ${dateLabel(end)}</text>
+    <text x="44" y="68" fill="${t.accent}" font-family="${MONO}" font-size="12" letter-spacing=".5">PUBLIC CODE ACTIVITY  ·  ${dateLabel(start)} TO ${dateLabel(end)}</text>
     <g class="num">
-      <text x="36" y="206" fill="${t.foregroundBright}" font-size="150" font-weight="520" letter-spacing="-9.7">${total}<tspan dx="18" fill="${t.muted}" font-size="28" letter-spacing="-.5">commits</tspan></text>
+      <text x="36" y="206" fill="${t.foregroundBright}" font-size="150" font-weight="600" letter-spacing="-6">${total}<tspan dx="18" fill="${t.muted}" font-size="28" letter-spacing="-.5">commits</tspan></text>
       <text x="44" y="252" fill="${t.muted}" font-size="20">across ${projects.length} repositories in 13 weeks.</text>
     </g>
     <path d="M560 236H1156" stroke="${t.lineStrong}"/>

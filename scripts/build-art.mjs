@@ -5,7 +5,7 @@
 
 import { mkdir, writeFile } from "node:fs/promises";
 import { pathToFileURL } from "node:url";
-import { themes, ease, esc, SANS, MONO } from "./theme.mjs";
+import { themes, ease, esc, tinted, SANS, MONO } from "./theme.mjs";
 
 const r2 = (n) => Math.round(n * 100) / 100;
 const pct = (n) => `${r2(n * 100)}%`;
@@ -35,9 +35,15 @@ function windowFrames(name, from, to) {
   return `@keyframes ${name}{${frames.join("")}}`;
 }
 
-// Lucide arrow-up-right / arrow-right, stroke 2, drawn at `size` px.
+// Lucide arrow-up-right / arrow-right / mail, stroke 2, drawn at `size` px.
+const ICONS = {
+  "up-right": "M7 7h10v10M7 17 17 7",
+  right: "M5 12h14M12 5l7 7-7 7",
+  mail: "M4 4h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2zM22 7l-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7",
+};
+
 function icon(kind, x, y, size, color) {
-  const d = kind === "up-right" ? "M7 7h10v10M7 17 17 7" : "M5 12h14M12 5l7 7-7 7";
+  const d = ICONS[kind];
   return `<path transform="translate(${x} ${y}) scale(${r2(size / 24)})" d="${d}" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>`;
 }
 
@@ -59,6 +65,7 @@ function kinetic(text, cls, start) {
 
 function hero(t) {
   const H = 580, cx = W / 2, cy = 300;
+  const satelliteColors = [t.tints.iris, t.tints.odyssey, t.tints.orbit, t.tints.sourcesight];
   const rings = [
     { r: 150, alpha: 0.1, dur: 90, dir: 1 },
     { r: 215, alpha: 0.13, dur: 120, dir: -1 },
@@ -68,6 +75,7 @@ function hero(t) {
     { r: 525, alpha: 0.28, dur: 300, dir: -1 },
     { r: 615, alpha: 0.3, dur: 360, dir: 1, satellite: 150 },
   ];
+  let satellites = 0;
   const ringSvg = rings.map((ring, i) => {
     const count = Math.round((2 * Math.PI * ring.r) / 30);
     const dots = [];
@@ -80,7 +88,8 @@ function hero(t) {
     const sat = ring.satellite === undefined ? "" : (() => {
       const a = ring.satellite * Math.PI / 180;
       const x = r2(cx + ring.r * Math.cos(a)), y = r2(cy + ring.r * Math.sin(a));
-      return `<circle class="halo" cx="${x}" cy="${y}" r="4.5" fill="none" stroke="${t.dotEnergy}" stroke-width="1.2" style="animation-delay:${r2(i * 0.7)}s"/><circle cx="${x}" cy="${y}" r="4.5" fill="${t.dotEnergy}"/>`;
+      const color = satelliteColors[satellites++ % satelliteColors.length];
+      return `<circle class="halo" cx="${x}" cy="${y}" r="4.5" fill="none" stroke="${color}" stroke-width="1.2" style="animation-delay:${r2(i * 0.7)}s"/><circle cx="${x}" cy="${y}" r="4.5" fill="${color}"/>`;
     })();
     return `<g class="orbit" style="animation-duration:${ring.dur}s;animation-direction:${ring.dir > 0 ? "normal" : "reverse"}"><g fill="${t.dotInk}" fill-opacity="${ring.alpha}">${dots.join("")}</g>${sat}</g>`;
   }).join("\n");
@@ -102,14 +111,14 @@ ${RISE}`;
 <g clip-path="url(#hero-frame)">${ringSvg}</g>
 <text class="r" x="44" y="58" font-family="${SANS}" font-size="15" font-weight="640" letter-spacing="-.375" fill="${t.foregroundBright}">Jonah Chang</text>
 <text class="r" x="${W - 44}" y="58" text-anchor="end" font-family="${MONO}" font-size="12" letter-spacing=".5" fill="${t.muted}">VEX V5 · TEAM 56S · MAINE</text>
-<g text-anchor="middle" font-family="${SANS}" font-weight="520">
+<g text-anchor="middle" font-family="${SANS}" font-weight="600">
 <text class="r" x="${cx}" y="208" font-size="28" fill="${t.muted}">Hi, I’m Jonah.</text>
-<text x="${cx}" y="306" font-size="96" letter-spacing="-5.3" fill="${t.foregroundBright}">${kinetic(line1, "k1", 0)}</text>
-<text x="${cx}" y="400" font-size="96" letter-spacing="-5.3" fill="${t.muted}">${kinetic(line2, "k2", line1.length)}</text>
+<text x="${cx}" y="306" font-size="96" letter-spacing="-3.6" fill="${t.foregroundBright}">${kinetic(line1, "k1", 0)}</text>
+<text x="${cx}" y="400" font-size="96" letter-spacing="-3.6" fill="${t.muted}">${kinetic(line2, "k2", line1.length)}</text>
 </g>
 <text class="r" style="animation-delay:.9s" x="${cx}" y="500" text-anchor="middle" font-family="${MONO}" font-size="13" letter-spacing=".52" fill="${t.foregroundSoft}">ROBOTICS  ·  COMPUTER VISION  ·  SYSTEMS SOFTWARE</text>`;
   return svg(W, H, "Jonah Chang. I build robots. And teach them to see.",
-    "Black header with the headline in huge type over slowly orbiting rings of dots, each ring carrying a blue satellite.", style, body);
+    "Black header with the headline in huge type over slowly orbiting rings of dots, with satellites in each project's color.", style, body);
 }
 
 // ── Statement: the about paragraph, lit word by word ──────────────────────────
@@ -129,7 +138,7 @@ function statement(t) {
     return `<tspan class="w" style="animation-delay:${r2(0.25 + n * 0.055)}s">${esc(word)}${j < all.length - 1 ? " " : ""}</tspan>`;
   }).join("")}</text>`).join("\n");
   const style = `.w{animation:lit .9s ease backwards}@keyframes lit{from{fill:${t.muted};opacity:.28}}`;
-  const body = `<g text-anchor="middle" font-family="${SANS}" font-size="42" font-weight="520" letter-spacing="-1.3" fill="${t.foregroundBright}">
+  const body = `<g text-anchor="middle" font-family="${SANS}" font-size="42" font-weight="600" letter-spacing="-.9" fill="${t.foregroundBright}">
 ${text}
 </g>`;
   return svg(W, H, lines.join(" "), "The about paragraph in large type; each word lights up in turn.", style, body);
@@ -139,9 +148,9 @@ ${text}
 
 function chapter(eyebrow, title) {
   return (t) => svg(W, 210, title, `${eyebrow}. ${title}`, RISE,
-    `<g text-anchor="middle" font-family="${SANS}" font-weight="520">
+    `<g text-anchor="middle" font-family="${SANS}" font-weight="600">
 <text class="r" x="${W / 2}" y="78" font-size="26" fill="${t.muted}">${esc(eyebrow)}</text>
-<text class="r" style="animation-delay:.08s" x="${W / 2}" y="170" font-size="84" letter-spacing="-4.4" fill="${t.foregroundBright}">${esc(title)}</text>
+<text class="r" style="animation-delay:.08s" x="${W / 2}" y="170" font-size="84" letter-spacing="-3.2" fill="${t.foregroundBright}">${esc(title)}</text>
 </g>`);
 }
 
@@ -156,7 +165,7 @@ function showcase(t, { id, flip, index, eyebrow, name, lines, tags, cta, diagram
   const body = `<rect width="${W}" height="${SHOW_H}" rx="28" fill="${t.surface}"/>
 <g class="r">
 <text x="${x0}" y="168" font-family="${MONO}" font-size="13" letter-spacing=".52" fill="${t.accent}">${index}  ·  ${esc(eyebrow)}</text>
-<text x="${x0 - 4}" y="262" font-family="${SANS}" font-size="84" font-weight="520" letter-spacing="-4.4" fill="${t.foregroundBright}">${esc(name)}</text>
+<text x="${x0 - 4}" y="262" font-family="${SANS}" font-size="84" font-weight="600" letter-spacing="-3.2" fill="${t.foregroundBright}">${esc(name)}</text>
 </g>
 <g class="r" style="animation-delay:.08s">
 <g font-family="${SANS}" font-size="24" fill="${t.muted}">${lines.map((line, i) => `<text x="${x0}" y="${318 + i * 34}">${esc(line)}</text>`).join("")}</g>
@@ -216,7 +225,8 @@ function bezierPath(segments) {
   return { d, pose, segmentEnd };
 }
 
-function odyssey(t) {
+function odyssey(base) {
+  const t = tinted(base, "odyssey");
   const loop = 12, steps = 16;
   const field = { x: 120, y: 50, s: 400 };
   const waypoints = [[170, 400], [330, 392], [462, 330], [446, 196], [334, 228], [262, 128], [150, 170], [138, 300]];
@@ -269,7 +279,8 @@ ${label(t, 616, 34, readout(0.36), { anchor: "end" })}
   });
 }
 
-function orbit(t) {
+function orbit(base) {
+  const t = tinted(base, "orbit");
   const loop = 10, N = 40;
   const camL = [270, 440], camR = [370, 440], mid = [320, 440];
   const track = Array.from({ length: N + 1 }, (_, i) => {
@@ -319,7 +330,8 @@ ${label(t, mid[0], 478, "BASELINE", { anchor: "middle" })}
   });
 }
 
-function iris(t) {
+function iris(base) {
+  const t = tinted(base, "iris");
   const loop = 12;
   const S = [320, 290], L1 = 132, L2 = 122, GRIP = 30;
   const beltTop = 390, binFloor = 440;
@@ -403,7 +415,8 @@ ${label(t, 616, 34, "6-DOF  ·  3D PRINTED", { anchor: "end" })}`;
   });
 }
 
-function calmlist(t) {
+function calmlist(base) {
+  const t = tinted(base, "calmlist");
   const loop = 11;
   const win = { x: 30, y: 30, w: 580, h: 440 };
   const side = 160;
@@ -452,7 +465,7 @@ ${label(t, win.x + win.w / 2, win.y + 24, "CALMLIST", { anchor: "middle" })}
     ? `<rect x="${win.x + 10}" y="${win.y + 58 + i * 36}" width="${side - 20}" height="30" rx="8" fill="${t.hoverWash}"/><text x="${win.x + 24}" y="${win.y + 78 + i * 36}" fill="${t.accent}" font-weight="500">${item}</text>`
     : `<text x="${win.x + 24}" y="${win.y + 78 + i * 36}" fill="${t.foregroundSoft}">${item}</text>`).join("")}</g>
 ${label(t, win.x + 24, win.y + win.h - 22, "LOCAL-FIRST")}
-<text x="${main}" y="${win.y + 94}" font-family="${SANS}" font-size="30" font-weight="520" letter-spacing="-1" fill="${t.foregroundBright}">Today</text>
+<text x="${main}" y="${win.y + 94}" font-family="${SANS}" font-size="30" font-weight="600" letter-spacing="-.8" fill="${t.foregroundBright}">Today</text>
 <g class="live">${counts.map(([, , open], k) => label(t, win.x + win.w - 24, win.y + 92, `${open} OPEN`, { anchor: "end", cls: `count c${k}` })).join("")}</g>
 <rect x="${main - 6}" y="${win.y + 116}" width="${win.x + win.w - main - 18}" height="40" rx="10" fill="none" stroke="${t.lineControl}" stroke-width="1.2"/>
 <rect x="${win.x + win.w - 70}" y="${win.y + 126}" width="40" height="20" rx="5" fill="none" stroke="${t.line}"/>${label(t, win.x + win.w - 50, win.y + 140, "⌘K", { anchor: "middle" })}
@@ -472,17 +485,20 @@ ${label(t, win.x + 24, win.y + win.h - 22, "LOCAL-FIRST")}
 // ── Tiles: the rest of the lab ────────────────────────────────────────────────
 
 const TILES = [
-  ["odyssey-sim", "Odyssey Simulator", ["Plan autonomous routines on a virtual", "VEX field, then export the C++."], "TYPESCRIPT · SIMULATION"],
-  ["sourcesight", "SourceSight", ["Linux-native real-time visualization", "with a custom Dear ImGui interface."], "C++20 · OPENGL · IMGUI"],
+  ["odyssey-sim", "Odyssey Simulator", ["Plan autonomous routines on a virtual", "VEX field, then export the C++."], "TYPESCRIPT · SIMULATION", "odyssey"],
+  ["sourcesight", "SourceSight", ["Linux-native real-time visualization", "with a custom Dear ImGui interface."], "C++20 · OPENGL · IMGUI", "sourcesight"],
   ["handwave", "Handwave", ["Control a Mac with hand gestures", "through the webcam."], "PYTHON · MEDIAPIPE"],
   ["override", "Team 56S / Override", ["Competition code for VEX team 56S,", "with Odyssey-powered autonomous."], "C++ · PROS · VEX V5"],
   ["harbor", "Harbor", ["Local media download and conversion", "built on YoutubeExplode and ffmpeg."], "C# · .NET"],
   ["desktops", "Omarchy desktops", ["Four Hyprland themes with their own", "bars, motion and screensavers."], "QML · CSS · SHELL"],
+  ["vexvortex", "VEXVortex", ["Competition data and analytics for", "VEX events, from the RobotEvents API."], "SWIFT · ROBOTEVENTS API", "vortex"],
+  ["reticly", "Reticly", ["A free, open-source crosshair overlay", "for Windows with recoil tracking."], "C# · WINDOWS"],
 ];
 
 function tile(i) {
-  const [, name, lines, tags] = TILES[i];
-  return (t) => {
+  const [, name, lines, tags, project] = TILES[i];
+  return (base) => {
+    const t = project ? tinted(base, project) : base;
     const TW = 590, TH = 240;
     const style = `${RISE}.dot{animation:pulse 4s ease-in-out infinite}@keyframes pulse{50%{fill-opacity:.25}}`;
     const body = `<rect width="${TW}" height="${TH}" rx="24" fill="${t.surface}"/>
@@ -491,7 +507,7 @@ function tile(i) {
 <text x="58" y="54" font-family="${MONO}" font-size="12" letter-spacing=".5" fill="${t.muted}">${String(i + 1).padStart(2, "0")}</text>
 <circle cx="${TW - 52}" cy="52" r="22" fill="none" stroke="${t.lineControl}" stroke-width="1.5"/>
 ${icon("up-right", TW - 61, 43, 18, t.foreground)}
-<text x="38" y="118" font-family="${SANS}" font-size="36" font-weight="520" letter-spacing="-1.3" fill="${t.foregroundBright}">${esc(name)}</text>
+<text x="38" y="118" font-family="${SANS}" font-size="36" font-weight="600" letter-spacing="-1" fill="${t.foregroundBright}">${esc(name)}</text>
 <g font-family="${SANS}" font-size="18" fill="${t.muted}">${lines.map((line, j) => `<text x="40" y="${156 + j * 26}">${esc(line)}</text>`).join("")}</g>
 <text x="40" y="${TH - 26}" font-family="${MONO}" font-size="11" letter-spacing=".44" fill="${t.muted}">${esc(tags)}</text>
 </g>`;
@@ -564,7 +580,7 @@ function closing(t) {
       live.push(`${circle}><animateTransform attributeName="transform" type="translate" dur="${loop}s" repeatCount="indefinite" values="${offsets.map((o) => o.join(" ")).join(";")}"/></circle>`);
     }
   }
-  const link = "JONAHCHANG207.VERCEL.APP";
+  const link = "CORUND207@GMAIL.COM";
   const linkHalf = (link.length * (14 * 0.6 + 0.56)) / 2;
   const d = `M${cursorPath.map((p) => p.join(" ")).join("L")}Z`;
   const body = `<rect x=".75" y=".75" width="${W - 1.5}" height="${H - 1.5}" rx="28" fill="${t.background}" stroke="${t.lineStrong}" stroke-width="1.5"/>
@@ -575,15 +591,15 @@ function closing(t) {
 </g>
 <g class="still">${still.join("")}</g>
 </g>
-<g text-anchor="middle" font-family="${SANS}" font-weight="520">
+<g text-anchor="middle" font-family="${SANS}" font-weight="600">
 <text class="r" x="${W / 2}" y="180" font-size="28" fill="${t.muted}">Have a project question?</text>
-<text class="r" style="animation-delay:.08s" x="${W / 2}" y="286" font-size="104" letter-spacing="-6" fill="${t.foregroundBright}">Let’s build it.</text>
+<text class="r" style="animation-delay:.08s" x="${W / 2}" y="286" font-size="104" letter-spacing="-4" fill="${t.foregroundBright}">Let’s build it.</text>
 </g>
 <g class="r" style="animation-delay:.16s">
 <text x="${W / 2 - 12}" y="352" text-anchor="middle" font-family="${MONO}" font-size="14" letter-spacing=".56" fill="${t.accent}">${link}</text>
-${icon("up-right", r2(W / 2 - 12 + linkHalf + 6), 340, 16, t.accent)}
+${icon("mail", r2(W / 2 - 12 + linkHalf + 8), 340, 16, t.accent)}
 </g>`;
-  return svg(W, H, "Have a project question? Let’s build it.", "Closing chapter over a dot field that leans toward a softly gliding blue cursor, with a link to jonahchang207.vercel.app.", RISE, body);
+  return svg(W, H, "Have a project question? Let’s build it.", "Closing chapter over a dot field that leans toward a softly gliding blue cursor, with an email link to corund207@gmail.com.", RISE, body);
 }
 
 // ── Pill buttons ──────────────────────────────────────────────────────────────
@@ -613,6 +629,7 @@ export const pieces = {
   toolkit,
   closing,
   "button-portfolio": (t) => button(t, { label: "Visit Portfolio", kind: "up-right", primary: true }),
+  "button-email": (t) => button(t, { label: "Email Me", kind: "mail", primary: false }),
   "button-repositories": (t) => button(t, { label: "View Repositories", kind: "right", primary: false }),
 };
 

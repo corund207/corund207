@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="125" height="48" viewBox="0 0 125 48" role="img" aria-labelledby="title desc">
+<title id="title">Email Me</title>
+<desc id="desc">Email Me button</desc>
+<style>.still{display:none}@media (prefers-reduced-motion:reduce){*{animation:none!important}.live{display:none}.still{display:inline}}</style>
+<rect x=".75" y=".75" width="123.5" height="46.5" rx="23.25" fill="none" stroke="rgba(245, 245, 247, 0.42)" stroke-width="1.5"/>
+<text x="77" y="29" text-anchor="end" font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="15" font-weight="500" fill="#f5f5f7">Email Me</text>
+<path transform="translate(85 16) scale(0.67)" d="M4 4h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2zM22 7l-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" fill="none" stroke="#f5f5f7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
